@@ -1,0 +1,10 @@
+{
+  "name": "GestorStockCerrajeria",
+  "version": "1.0.0",
+  "mainClass": "Main",
+  "sourceDirectories": ["src"],
+  "testDirectories": [],
+  "dependencies": [],
+  "outputDirectory": "out/production/GestorStockCerrajeria",
+  "javaVersion": 17
+}
