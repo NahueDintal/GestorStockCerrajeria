@@ -1,3 +1,8 @@
 repositories/ProbabilityDAO.class
+models/Candado.class
 controllers/RoomController$1.class
+models/Manija.class
+models/Alarma.class
 controllers/RoomController$2.class
+models/Camara.class
+models/Cerradura.class
