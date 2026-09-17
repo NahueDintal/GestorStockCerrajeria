@@ -1,6 +1,6 @@
-2026-09-17 15:33:44.230 [JavaFX Application Thread] DEBUG repositories.RoomDAO - Listando habitaciones activas
-2026-09-17 15:33:44.236 [JavaFX Application Thread] DEBUG repositories.RoomDAO - Ejecutando listByActive con active=true
-2026-09-17 15:33:44.237 [JavaFX Application Thread] ERROR repositories.RoomDAO - Error al listar habitaciones (active=true)
+2026-09-11 09:34:47.798 [JavaFX Application Thread] DEBUG repositories.RoomDAO - Listando habitaciones activas
+2026-09-11 09:34:47.803 [JavaFX Application Thread] DEBUG repositories.RoomDAO - Ejecutando listByActive con active=true
+2026-09-11 09:34:47.804 [JavaFX Application Thread] ERROR repositories.RoomDAO - Error al listar habitaciones (active=true)
 java.sql.SQLException: DB_URL no está configurada.
 	at repositories.ConexionDB.getConnection(ConexionDB.java:25)
 	at repositories.RoomDAO.listByActive(RoomDAO.java:34)
@@ -64,9 +64,9 @@ java.sql.SQLException: DB_URL no está configurada.
 	at javafx.graphics/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
 	at javafx.graphics/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$11(GtkApplication.java:290)
 	at java.base/java.lang.Thread.run(Thread.java:1516)
-2026-09-17 15:33:52.020 [JavaFX Application Thread] DEBUG repositories.RoomDAO - Listando habitaciones activas
-2026-09-17 15:33:52.020 [JavaFX Application Thread] DEBUG repositories.RoomDAO - Ejecutando listByActive con active=true
-2026-09-17 15:33:52.021 [JavaFX Application Thread] ERROR repositories.RoomDAO - Error al listar habitaciones (active=true)
+2026-09-11 09:34:55.537 [JavaFX Application Thread] DEBUG repositories.RoomDAO - Listando habitaciones activas
+2026-09-11 09:34:55.537 [JavaFX Application Thread] DEBUG repositories.RoomDAO - Ejecutando listByActive con active=true
+2026-09-11 09:34:55.537 [JavaFX Application Thread] ERROR repositories.RoomDAO - Error al listar habitaciones (active=true)
 java.sql.SQLException: DB_URL no está configurada.
 	at repositories.ConexionDB.getConnection(ConexionDB.java:25)
 	at repositories.RoomDAO.listByActive(RoomDAO.java:34)
