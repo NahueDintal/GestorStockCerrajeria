@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@/css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.RoomController">
+<AnchorPane stylesheets="@/css/style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CandadoController">
 
     <VBox spacing="15" styleClass="content-main" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
         <padding>
@@ -22,7 +22,7 @@
 
         <!-- Título y botones -->
         <HBox alignment="CENTER_LEFT" spacing="15">
-            <Label styleClass="section-title" text="Habitaciones">
+            <Label styleClass="section-title" text="Candados">
                 <font><Font size="24.0" /></font>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
