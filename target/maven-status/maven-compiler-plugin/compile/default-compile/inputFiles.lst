@@ -8,8 +8,8 @@
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/MainApp.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/controllers/StaffFormController.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/controllers/CustomerFormController.java
-/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/repositories/StaffDAO.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/repositories/ProductRepo.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/repositories/StaffDAO.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/repositories/CustomerOriginDAO.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/controllers/DashboardController.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/repositories/JobPositionDAO.java
@@ -30,6 +30,7 @@
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/repositories/PaymentMethodRepo.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Manija.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Alarma.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Llave.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/repositories/ConsumptionRepo.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/repositories/ProbabilityDAO.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/controllers/PaymentController.java
