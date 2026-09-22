@@ -6,3 +6,4 @@ models/Alarma.class
 controllers/RoomController$2.class
 models/Camara.class
 models/Cerradura.class
+models/Llave.class
