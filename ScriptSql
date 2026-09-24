@@ -1,0 +1,234 @@
+-- =====================================================================
+--  Base de datos: cerrajeria
+--  Sistema de gestión de stock - Local de cerrajería
+--  MySQL 8.x
+-- =====================================================================
+
+DROP DATABASE IF EXISTS cerrajeria;
+CREATE DATABASE cerrajeria
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+USE cerrajeria;
+
+-- ---------------------------------------------------------------------
+-- 1. CATÁLOGOS
+-- ---------------------------------------------------------------------
+
+CREATE TABLE categorias (
+    id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+    nombre       VARCHAR(50)  NOT NULL UNIQUE,
+    etiqueta     VARCHAR(100) NOT NULL,
+    activo       BOOLEAN NOT NULL DEFAULT TRUE
+) ENGINE=InnoDB;
+
+CREATE TABLE marcas (
+    id_marca INT AUTO_INCREMENT PRIMARY KEY,
+    nombre   VARCHAR(100) NOT NULL UNIQUE,
+    activo   BOOLEAN NOT NULL DEFAULT TRUE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- 2. PRODUCTOS (tabla base)
+-- ---------------------------------------------------------------------
+
+CREATE TABLE productos (
+    id_producto     INT AUTO_INCREMENT PRIMARY KEY,
+    codigo          VARCHAR(50)  UNIQUE,
+    id_categoria    INT          NOT NULL,
+    id_marca        INT          NULL,
+    modelo          VARCHAR(100),
+    tipo            VARCHAR(100),
+    descripcion     TEXT,
+    precio_costo    DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    precio_venta    DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    stock           INT          NOT NULL DEFAULT 0,
+    stock_minimo    INT          NOT NULL DEFAULT 0,
+    activo          BOOLEAN      NOT NULL DEFAULT TRUE,
+    creado_en       TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
+                                 ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_producto_categoria
+        FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria)
+        ON UPDATE CASCADE ON DELETE RESTRICT,
+
+    CONSTRAINT fk_producto_marca
+        FOREIGN KEY (id_marca) REFERENCES marcas(id_marca)
+        ON UPDATE CASCADE ON DELETE SET NULL,
+
+    INDEX idx_prod_categoria (id_categoria),
+    INDEX idx_prod_marca     (id_marca),
+    INDEX idx_prod_activo    (activo),
+    INDEX idx_prod_codigo    (codigo)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- 3. TABLAS DE DETALLE (1:1 con productos)
+-- ---------------------------------------------------------------------
+
+CREATE TABLE candado_detalle (
+    id_producto      INT PRIMARY KEY,
+    cantidad_llaves  INT NULL,
+    CONSTRAINT fk_candado_producto
+        FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE cerradura_detalle (
+    id_producto             INT PRIMARY KEY,
+    cantidad_combinaciones  INT NULL,
+    CONSTRAINT fk_cerradura_producto
+        FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE manija_detalle (
+    id_producto INT PRIMARY KEY,
+    material    VARCHAR(50) NULL,
+    CONSTRAINT fk_manija_producto
+        FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- 4. SEEDS: CATEGORÍAS
+-- ---------------------------------------------------------------------
+
+INSERT INTO categorias (id_categoria, nombre, etiqueta) VALUES
+    (1, 'alarma',    'Alarmas'),
+    (2, 'camara',    'Cámaras'),
+    (3, 'candado',   'Candados'),
+    (4, 'cerradura', 'Cerraduras'),
+    (5, 'llave',     'Llaves'),
+    (6, 'manija',    'Manijas');
+
+-- ---------------------------------------------------------------------
+-- 5. SEEDS: MARCAS (de ejemplo, agregá las que use tu viejo)
+-- ---------------------------------------------------------------------
+
+INSERT INTO marcas (nombre) VALUES
+    ('Travex'),
+    ('Prive'),
+    ('Ducasse'),
+    ('Sica'),
+    ('Baglieto'),
+    ('Hafele'),
+    ('Verona'),
+    ('Genérica');
+
+-- ---------------------------------------------------------------------
+-- 6. DATOS DE EJEMPLO (para probar el repository)
+-- ---------------------------------------------------------------------
+
+-- Candado 1
+INSERT INTO productos
+    (codigo, id_categoria, id_marca, modelo, tipo, descripcion,
+     precio_costo, precio_venta, stock, stock_minimo)
+VALUES
+    ('CAND-001', 3, 1, 'T-40', 'bulón', 'Candado de bronce 40mm',
+     2500.00, 3500.00, 10, 2);
+INSERT INTO candado_detalle (id_producto, cantidad_llaves)
+    VALUES (LAST_INSERT_ID(), 3);
+
+-- Candado 2
+INSERT INTO productos
+    (codigo, id_categoria, id_marca, modelo, tipo, descripcion,
+     precio_costo, precio_venta, stock, stock_minimo)
+VALUES
+    ('CAND-002', 3, 2, 'P-30', 'magnetico', 'Candado magnético 30mm',
+     1800.00, 2520.00, 5, 3);
+INSERT INTO candado_detalle (id_producto, cantidad_llaves)
+    VALUES (LAST_INSERT_ID(), 2);
+
+-- Cerradura 1
+INSERT INTO productos
+    (codigo, id_categoria, id_marca, modelo, tipo, descripcion,
+     precio_costo, precio_venta, stock, stock_minimo)
+VALUES
+    ('CERR-001', 4, 3, 'D-500', 'embutir', 'Cerradura embutir pomo',
+     8500.00, 11900.00, 4, 1);
+INSERT INTO cerradura_detalle (id_producto, cantidad_combinaciones)
+    VALUES (LAST_INSERT_ID(), 1000);
+
+-- Manija 1
+INSERT INTO productos
+    (codigo, id_categoria, id_marca, modelo, tipo, descripcion,
+     precio_costo, precio_venta, stock, stock_minimo)
+VALUES
+    ('MAN-001', 6, 5, 'M-200', 'picaporte', 'Manija de aluminio',
+     3200.00, 4480.00, 8, 2);
+INSERT INTO manija_detalle (id_producto, material)
+    VALUES (LAST_INSERT_ID(), 'aluminio');
+
+-- Llave 1 (sin detalle)
+INSERT INTO productos
+    (codigo, id_categoria, id_marca, modelo, tipo, descripcion,
+     precio_costo, precio_venta, stock, stock_minimo)
+VALUES
+    ('LLAV-001', 5, 8, 'comun', 'comun', 'Llave común hierro',
+     150.00, 210.00, 100, 20);
+
+-- Alarma 1 (sin detalle)
+INSERT INTO productos
+    (codigo, id_categoria, id_marca, modelo, tipo, descripcion,
+     precio_costo, precio_venta, stock, stock_minimo)
+VALUES
+    ('ALAR-001', 1, 6, 'AL-100', 'sensor', 'Sensor de movimiento',
+     4500.00, 6300.00, 6, 2);
+
+-- Cámara 1 (sin detalle)
+INSERT INTO productos
+    (codigo, id_categoria, id_marca, modelo, tipo, descripcion,
+     precio_costo, precio_venta, stock, stock_minimo)
+VALUES
+    ('CAM-001', 2, 7, 'CAM-HD', 'domo', 'Cámara domo HD 1080p',
+     12000.00, 16800.00, 3, 1);
+
+-- ---------------------------------------------------------------------
+-- 7. VISTAS ÚTILES (opcional, pero te salvan la vida)
+-- ---------------------------------------------------------------------
+
+-- Vista completa: productos con marca, categoría y detalles
+CREATE OR REPLACE VIEW v_productos_completo AS
+SELECT
+    p.id_producto,
+    p.codigo,
+    c.nombre    AS categoria,
+    c.etiqueta  AS categoria_etiqueta,
+    m.nombre    AS marca,
+    p.modelo,
+    p.tipo,
+    p.descripcion,
+    p.precio_costo,
+    p.precio_venta,
+    p.stock,
+    p.stock_minimo,
+    p.activo,
+    cd.cantidad_llaves,
+    cr.cantidad_combinaciones,
+    md.material
+FROM productos p
+    JOIN categorias c      ON p.id_categoria = c.id_categoria
+    LEFT JOIN marcas m     ON p.id_marca     = m.id_marca
+    LEFT JOIN candado_detalle   cd ON p.id_producto = cd.id_producto
+    LEFT JOIN cerradura_detalle cr ON p.id_producto = cr.id_producto
+    LEFT JOIN manija_detalle    md ON p.id_producto = md.id_producto;
+
+-- Vista: productos con stock bajo
+CREATE OR REPLACE VIEW v_stock_bajo AS
+SELECT
+    p.id_producto,
+    p.codigo,
+    c.etiqueta AS categoria,
+    m.nombre   AS marca,
+    p.modelo,
+    p.stock,
+    p.stock_minimo,
+    (p.stock_minimo - p.stock) AS faltante
+FROM productos p
+    JOIN categorias c  ON p.id_categoria = c.id_categoria
+    LEFT JOIN marcas m ON p.id_marca     = m.id_marca
+WHERE p.activo = TRUE
+  AND p.stock <= p.stock_minimo
+ORDER BY faltante DESC;
