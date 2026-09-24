@@ -1,12 +1,11 @@
-package models;
-
-public class Cerradura {
-  private int idCerradura;
-  private String marca;
-  private String modelo;
-  private String tipo;
-  private int cantidadCombonaciones;
-  private int stock;
-  private String descripcion;
-  private double precio;
+public class Cerradura extends Producto {
+    private int cantidadCombinaciones;
+    // getter/setter
 }
+public class Manija extends Producto {
+    private String material;
+    // getter/setter
+}
+public class Alarma extends Producto {}   // sin extras
+public class Camara extends Producto {}
+public class Llave  extends Producto {}
