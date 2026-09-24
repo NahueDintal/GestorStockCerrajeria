@@ -1,7 +1,14 @@
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Producto.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Candado.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/repositories/MarcaRepository.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Camara.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/repositories/ProductoRepository.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/MainApp.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Manija.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Categoria.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Alarma.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Llave.java
-/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Camara.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/config/ConexionDB.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Cerradura.java
-/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/models/Manija.java
-/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/MainApp.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/repositories/Repository.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/config/Configuracion.java
