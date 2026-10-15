@@ -97,50 +97,52 @@ public class PresupuestoDAO {
   }
 
   public Presupuesto buscarPorId(int id) throws SQLException {
-    String sql = "SELECT * FROM presupuesto WHERE id = ?";
-    Presupuesto p = null;
-    try (Connection cn = ConexionDB.getConexion();
-        PreparedStatement ps = cn.prepareStatement(sql)) {
-      ps.setInt(1, id);
-      try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next())
-          p = mapear(rs);
-      }
-    }
-    if (p == null)
-      return null;
+    try (Connection cn = ConexionDB.getConexion()) {
 
-    // Cargar items
-    String sqlI = """
-            SELECT i.*, p.nombre, p.marca, p.precio_venta
-            FROM presupuesto_item i
-            LEFT JOIN producto p ON p.id = i.producto_id
-            WHERE i.presupuesto_id = ?
-        """;
-    List<ItemPresupuesto> items = new ArrayList<>();
-    try (Connection cn = ConexionDB.getConexion();
-        PreparedStatement ps = cn.prepareStatement(sqlI)) {
-      ps.setInt(1, id);
-      try (ResultSet rs = ps.executeQuery()) {
-        while (rs.next()) {
-          Producto prod = new Producto();
-          prod.setId(rs.getInt("producto_id"));
-          prod.setNombre(rs.getString("nombre"));
-          prod.setMarca(rs.getString("marca"));
-          prod.setPrecioVenta(rs.getDouble("precio_venta"));
-
-          ItemPresupuesto it = new ItemPresupuesto(
-              prod,
-              rs.getInt("cantidad"),
-              rs.getDouble("precio_unitario"),
-              rs.getDouble("descuento_item"));
-          it.setId(rs.getInt("id"));
-          items.add(it);
+      // 1) Cabecera
+      Presupuesto p = null;
+      String sql = "SELECT * FROM presupuesto WHERE id = ?";
+      try (PreparedStatement ps = cn.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        try (ResultSet rs = ps.executeQuery()) {
+          if (rs.next())
+            p = mapear(rs);
         }
       }
+      if (p == null)
+        return null;
+
+      // 2) Items (misma conexión, sin cerrarla en el medio)
+      String sqlI = """
+              SELECT i.*, p.nombre, p.marca, p.precio_venta
+              FROM presupuesto_item i
+              LEFT JOIN producto p ON p.id = i.producto_id
+              WHERE i.presupuesto_id = ?
+          """;
+      List<ItemPresupuesto> items = new ArrayList<>();
+      try (PreparedStatement ps = cn.prepareStatement(sqlI)) {
+        ps.setInt(1, id);
+        try (ResultSet rs = ps.executeQuery()) {
+          while (rs.next()) {
+            Producto prod = new Producto();
+            prod.setId(rs.getInt("producto_id"));
+            prod.setNombre(rs.getString("nombre"));
+            prod.setMarca(rs.getString("marca"));
+            prod.setPrecioVenta(rs.getDouble("precio_venta"));
+
+            ItemPresupuesto it = new ItemPresupuesto(
+                prod,
+                rs.getInt("cantidad"),
+                rs.getDouble("precio_unitario"),
+                rs.getDouble("descuento_item"));
+            it.setId(rs.getInt("id"));
+            items.add(it);
+          }
+        }
+      }
+      p.setItems(items);
+      return p;
     }
-    p.setItems(items);
-    return p;
   }
 
   public List<Presupuesto> buscar(String texto) throws SQLException {

@@ -43,7 +43,7 @@
         </HBox>
     </top>
     <center>
-        <TabPane tabClosingPolicy="UNAVAILABLE">
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
             <tabs>
                 <Tab text="Productos">
                     <fx:include source="ProductoView.fxml"/>
@@ -52,7 +52,7 @@
                     <fx:include source="PresupuestoView.fxml"/>
                 </Tab>
                 <Tab text="Historial">
-                    <fx:include source="HistorialView.fxml"/>
+                    <fx:include source="HistorialView.fxml" fx:id="historialView"/>
                 </Tab>
             </tabs>
         </TabPane>
