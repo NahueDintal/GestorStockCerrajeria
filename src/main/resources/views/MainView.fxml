@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cerrajeria.controller.MainController">
+
+    <top>
+        <MenuBar>
+            <menus>
+                <Menu text="Archivo"/>
+                <Menu text="Productos"/>
+                <Menu text="Presupuestos"/>
+                <Menu text="Ayuda"/>
+            </menus>
+        </MenuBar>
+    </top>
+
+    <center>
+        <Label text="¡La app arranca! 🎉"
+               style="-fx-font-size: 24px;"
+               BorderPane.alignment="CENTER"/>
+    </center>
+
+</BorderPane>
