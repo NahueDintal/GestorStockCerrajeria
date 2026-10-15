@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 public class ProductoFormController {
 
-    @FXML private TextField txtCodigo, txtNombre, txtMarca, txtTipo, txtModelo;
+    @FXML private TextField txtNombre, txtMarca, txtTipo, txtModelo;
     @FXML private TextField txtMaterial, txtMedidas, txtColor, txtProveedor;
     @FXML private TextField txtPrecioCosto, txtPrecioVenta;
     @FXML private TextField txtStock, txtStockMinimo, txtUbicacion;
@@ -20,7 +20,7 @@ public class ProductoFormController {
     @FXML private CheckBox chkActivo;
     @FXML private Button btnGuardar, btnCancelar;
 
-    private Producto producto;   // null = nuevo
+    private Producto producto;
     private boolean guardado = false;
 
     @FXML
@@ -28,12 +28,9 @@ public class ProductoFormController {
         try {
             cbCategoria.setItems(
                 FXCollections.observableArrayList(new CategoriaDAO().listar()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
-    /** Si p == null, modo "nuevo". Si p != null, modo "edición". */
     public void setProducto(Producto p) {
         this.producto = p;
         if (p == null) {
@@ -42,7 +39,6 @@ public class ProductoFormController {
             txtStockMinimo.setText("0");
             return;
         }
-        txtCodigo.setText(p.getCodigo());
         txtNombre.setText(p.getNombre());
         txtMarca.setText(p.getMarca());
         cbCategoria.setValue(p.getCategoria());
@@ -71,7 +67,6 @@ public class ProductoFormController {
             boolean esNuevo = (producto == null);
             if (esNuevo) producto = new Producto();
 
-            producto.setCodigo(txtCodigo.getText().trim());
             producto.setNombre(txtNombre.getText().trim());
             producto.setMarca(txtMarca.getText().trim());
             producto.setCategoria(cbCategoria.getValue());
@@ -97,16 +92,12 @@ public class ProductoFormController {
             guardado = true;
             cerrar();
         } catch (Exception e) {
-            alerta(Alert.AlertType.ERROR, "Error al guardar",
-                   e.getMessage());
+            alerta(Alert.AlertType.ERROR, "Error al guardar", e.getMessage());
             e.printStackTrace();
         }
     }
 
-    @FXML
-    private void cancelar() {
-        cerrar();
-    }
+    @FXML private void cancelar() { cerrar(); }
 
     private void cerrar() {
         ((Stage) btnCancelar.getScene().getWindow()).close();
@@ -114,7 +105,6 @@ public class ProductoFormController {
 
     private boolean validar() {
         StringBuilder err = new StringBuilder();
-        if (txtCodigo.getText().isBlank())  err.append("• Código obligatorio\n");
         if (txtNombre.getText().isBlank())  err.append("• Nombre obligatorio\n");
         if (cbCategoria.getValue() == null) err.append("• Elegí una categoría\n");
         if (err.length() > 0) {
@@ -126,12 +116,14 @@ public class ProductoFormController {
 
     private double parseDouble(String s) {
         if (s == null || s.isBlank()) return 0;
-        return Double.parseDouble(s.replace(",", "."));
+        try { return Double.parseDouble(s.replace(",", ".")); }
+        catch (NumberFormatException e) { return 0; }
     }
 
     private int parseInt(String s) {
         if (s == null || s.isBlank()) return 0;
-        return Integer.parseInt(s.trim());
+        try { return Integer.parseInt(s.trim()); }
+        catch (NumberFormatException e) { return 0; }
     }
 
     private void alerta(Alert.AlertType t, String titulo, String msj) {

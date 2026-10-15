@@ -24,7 +24,7 @@ public class ProductoController {
     @FXML private ComboBox<Categoria> cbFiltroCategoria;
     @FXML private Button btnNuevo, btnEditar, btnEliminar, btnRefrescar;
     @FXML private TableView<Producto> tabla;
-    @FXML private TableColumn<Producto, String>  colCodigo, colNombre, colMarca, colCategoria;
+    @FXML private TableColumn<Producto, String>  colNombre, colMarca, colCategoria;
     @FXML private TableColumn<Producto, Double>  colPrecio;
     @FXML private TableColumn<Producto, Integer> colStock;
 
@@ -42,23 +42,13 @@ public class ProductoController {
     }
 
     private void configurarColumnas() {
-        colCodigo.setCellValueFactory(c ->
-            new SimpleStringProperty(c.getValue().getCodigo()));
-        colNombre.setCellValueFactory(c ->
-            new SimpleStringProperty(c.getValue().getNombre()));
-        colMarca.setCellValueFactory(c ->
-            new SimpleStringProperty(c.getValue().getMarca()));
-        colCategoria.setCellValueFactory(c ->
-            new SimpleStringProperty(
-                c.getValue().getCategoria() == null
-                    ? ""
-                    : c.getValue().getCategoria().getNombre()));
-        colPrecio.setCellValueFactory(c ->
-            new SimpleObjectProperty<>(c.getValue().getPrecioVenta()));
-        colStock.setCellValueFactory(c ->
-            new SimpleObjectProperty<>(c.getValue().getStock()));
+        colNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
+        colMarca.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMarca()));
+        colCategoria.setCellValueFactory(c -> new SimpleStringProperty(
+            c.getValue().getCategoria() == null ? "" : c.getValue().getCategoria().getNombre()));
+        colPrecio.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getPrecioVenta()));
+        colStock.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getStock()));
 
-        // Formato $ para precio
         colPrecio.setCellFactory(col -> new TableCell<>() {
             @Override protected void updateItem(Double v, boolean empty) {
                 super.updateItem(v, empty);
@@ -66,7 +56,6 @@ public class ProductoController {
             }
         });
 
-        // Colorear stock bajo en rojo
         colStock.setCellFactory(col -> new TableCell<>() {
             @Override protected void updateItem(Integer v, boolean empty) {
                 super.updateItem(v, empty);
@@ -74,16 +63,17 @@ public class ProductoController {
                 setText(String.valueOf(v));
                 Producto p = getTableView().getItems().get(getIndex());
                 setStyle(p.necesitaReposicion()
-                    ? "-fx-text-fill: red; -fx-font-weight: bold;"
-                    : "");
+                    ? "-fx-text-fill: red; -fx-font-weight: bold;" : "");
             }
         });
     }
 
     private void configurarFiltros() {
         try {
-            cbFiltroCategoria.setItems(
-                FXCollections.observableArrayList(new CategoriaDAO().listar()));
+            var lista = FXCollections.observableArrayList(new CategoriaDAO().listar());
+            lista.add(0, new Categoria(-1, "— Todas —"));
+            cbFiltroCategoria.setItems(lista);
+            cbFiltroCategoria.getSelectionModel().selectFirst();
         } catch (Exception e) { e.printStackTrace(); }
 
         txtBuscar.textProperty().addListener((o, a, b) -> aplicarFiltros());
@@ -97,22 +87,20 @@ public class ProductoController {
             SortedList<Producto> ordenados = new SortedList<>(filtrados);
             ordenados.comparatorProperty().bind(tabla.comparatorProperty());
             tabla.setItems(ordenados);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     private void aplicarFiltros() {
         String q = txtBuscar.getText() == null ? "" : txtBuscar.getText().toLowerCase();
         Categoria cat = cbFiltroCategoria.getValue();
+        boolean filtrarPorCat = (cat != null && cat.getId() != -1);
         filtrados.setPredicate(p -> {
-            boolean okCat = (cat == null
-                || (p.getCategoria() != null && p.getCategoria().getId() == cat.getId()));
+            boolean okCat = !filtrarPorCat
+                || (p.getCategoria() != null && p.getCategoria().getId() == cat.getId());
             boolean okTxt = q.isEmpty()
-                || (p.getNombre()  != null && p.getNombre().toLowerCase().contains(q))
-                || (p.getMarca()   != null && p.getMarca().toLowerCase().contains(q))
-                || (p.getCodigo()  != null && p.getCodigo().toLowerCase().contains(q))
-                || (p.getModelo()  != null && p.getModelo().toLowerCase().contains(q));
+                || (p.getNombre() != null && p.getNombre().toLowerCase().contains(q))
+                || (p.getMarca()  != null && p.getMarca().toLowerCase().contains(q))
+                || (p.getModelo() != null && p.getModelo().toLowerCase().contains(q));
             return okCat && okTxt;
         });
     }
@@ -128,20 +116,15 @@ public class ProductoController {
     }
 
     private void actualizarBotones() {
-        boolean haySeleccion = tabla.getSelectionModel().getSelectedItem() != null;
-        btnEditar.setDisable(!haySeleccion);
-        btnEliminar.setDisable(!haySeleccion);
-        tabla.getSelectionModel().selectedItemProperty().addListener(
-            (o, a, b) -> {
-                btnEditar.setDisable(b == null);
-                btnEliminar.setDisable(b == null);
-            });
+        tabla.getSelectionModel().selectedItemProperty().addListener((o, a, b) -> {
+            btnEditar.setDisable(b == null);
+            btnEliminar.setDisable(b == null);
+        });
+        btnEditar.setDisable(true);
+        btnEliminar.setDisable(true);
     }
 
-    @FXML
-    private void nuevo() {
-        abrirFormulario(null);
-    }
+    @FXML private void nuevo() { abrirFormulario(null); }
 
     @FXML
     private void editar() {
@@ -169,9 +152,7 @@ public class ProductoController {
                 cargarDatos();
                 aplicarFiltros();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     @FXML
@@ -182,17 +163,14 @@ public class ProductoController {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
         a.setTitle("Eliminar producto");
         a.setHeaderText(null);
-        a.setContentText("¿Desactivar \"" + sel.getNombre() + "\"?\n" +
-                         "No se borra de la base, solo se marca como inactivo.");
+        a.setContentText("¿Desactivar \"" + sel.getNombre() + "\"?");
         if (a.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
 
         try {
             dao.desactivar(sel.getId());
             cargarDatos();
             aplicarFiltros();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     @FXML

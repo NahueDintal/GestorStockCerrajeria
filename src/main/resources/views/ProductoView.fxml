@@ -13,10 +13,10 @@
 
     <HBox spacing="10" alignment="CENTER_LEFT">
         <Label text="Buscar:"/>
-        <TextField fx:id="txtBuscar" promptText="Nombre, marca, código, modelo..."
+        <TextField fx:id="txtBuscar" promptText="Nombre, marca, modelo..."
                    prefWidth="280"/>
         <Label text="Categoría:"/>
-        <ComboBox fx:id="cbFiltroCategoria" prefWidth="150"/>
+        <ComboBox fx:id="cbFiltroCategoria" prefWidth="160"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button fx:id="btnNuevo"    text="+ Nuevo"  onAction="#nuevo"
                 style="-fx-base: #4CAF50;"/>
@@ -28,10 +28,9 @@
 
     <TableView fx:id="tabla" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="colCodigo"    text="Código"    prefWidth="100"/>
-            <TableColumn fx:id="colNombre"    text="Nombre"    prefWidth="280"/>
-            <TableColumn fx:id="colMarca"     text="Marca"     prefWidth="120"/>
-            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="130"/>
+            <TableColumn fx:id="colNombre"    text="Nombre"    prefWidth="300"/>
+            <TableColumn fx:id="colMarca"     text="Marca"     prefWidth="130"/>
+            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="150"/>
             <TableColumn fx:id="colPrecio"    text="Precio"    prefWidth="110"/>
             <TableColumn fx:id="colStock"     text="Stock"     prefWidth="80"/>
         </columns>

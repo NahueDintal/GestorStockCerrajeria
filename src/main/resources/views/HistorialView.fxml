@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cerrajeria.controller.HistorialController"
+      spacing="10">
+
+    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Buscar:"/>
+        <TextField fx:id="txtBuscar" promptText="Cliente o N° de presupuesto..."
+                   prefWidth="280"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnVer"        text="Ver"     onAction="#ver"/>
+        <Button fx:id="btnPDF"        text="📄 PDF"  onAction="#exportarPDF"
+                style="-fx-base: #2196F3;"/>
+        <Button fx:id="btnEliminar"   text="Eliminar" onAction="#eliminar"
+                style="-fx-base: #E57373;"/>
+        <Button fx:id="btnRefrescar"  text="⟳"       onAction="#refrescar"/>
+    </HBox>
+
+    <TableView fx:id="tabla" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colNumero"   text="N°"       prefWidth="70"/>
+            <TableColumn fx:id="colFecha"    text="Fecha"    prefWidth="100"/>
+            <TableColumn fx:id="colCliente"  text="Cliente"  prefWidth="250"/>
+            <TableColumn fx:id="colTelefono" text="Teléfono" prefWidth="130"/>
+            <TableColumn fx:id="colTotal"    text="Total"    prefWidth="120"/>
+        </columns>
+        <placeholder>
+            <Label text="Todavía no hay presupuestos guardados."/>
+        </placeholder>
+    </TableView>
+</VBox>

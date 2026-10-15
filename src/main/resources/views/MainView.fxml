@@ -51,6 +51,9 @@
                 <Tab text="Presupuestos">
                     <fx:include source="PresupuestoView.fxml"/>
                 </Tab>
+                <Tab text="Historial">
+                    <fx:include source="HistorialView.fxml"/>
+                </Tab>
             </tabs>
         </TabPane>
     </center>

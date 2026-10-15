@@ -1,4 +1,5 @@
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/MainApp.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/controller/HistorialController.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/controller/MainController.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/controller/PresupuestoController.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/controller/ProductoController.java
@@ -11,5 +12,6 @@
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/model/ItemPresupuesto.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/model/Presupuesto.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/model/Producto.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/PresupuestoPDF.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/Tema.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/ToggleSwitch.java
