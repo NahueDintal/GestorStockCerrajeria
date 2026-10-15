@@ -1,0 +1,187 @@
+.root {
+    -fx-font-family: "Inter", "Segoe UI", "Roboto", sans-serif;
+    -fx-font-size: 13px;
+
+    /* Paleta oscura — sobreescribimos las variables de Modena */
+    -fx-base: #2b2d31;
+    -fx-background: #1e1f22;
+    -fx-control-inner-background: #313338;
+    -fx-control-inner-background-alt: #2b2d31;
+    -fx-text-background-color: #e6e6e6;
+    -fx-accent: #43A047;
+    -fx-focus-color: #66BB6A;
+    -fx-faint-focus-color: #66BB6A22;
+    -fx-selection-bar: #3a5a40;
+    -fx-selection-bar-non-focused: #3a4a3c;
+    -fx-selection-bar-text: #ffffff;
+    -fx-border-color: #3f4147;
+}
+
+/* Texto claro en todos los controles base */
+.label, .check-box, .radio-button {
+    -fx-text-fill: #e6e6e6;
+}
+
+/* Barra de menú */
+.menu-bar {
+    -fx-background-color: #1a1c1f;
+}
+.menu-bar .label {
+    -fx-text-fill: #e6e6e6;
+}
+.menu-bar .menu:hover,
+.menu-bar .menu:showing {
+    -fx-background-color: #2b2d31;
+}
+
+/* Popup de menú */
+.context-menu {
+    -fx-background-color: #2b2d31;
+    -fx-border-color: #3f4147;
+}
+.menu-item .label {
+    -fx-text-fill: #e6e6e6;
+}
+.menu-item:focused {
+    -fx-background-color: #43A047;
+}
+.menu-item:focused .label {
+    -fx-text-fill: white;
+}
+
+/* Títulos */
+.label-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #a5d6a7;
+}
+
+/* Botones */
+.button {
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-padding: 6 14 6 14;
+}
+.button:hover {
+    -fx-opacity: 0.9;
+}
+
+/* Tablas */
+.table-view {
+    -fx-border-color: #3f4147;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-background-color: #2b2d31;
+}
+.table-view .column-header {
+    -fx-background-color: #232629;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #a5d6a7;
+    -fx-font-weight: bold;
+}
+.table-row-cell {
+    -fx-background-color: #2b2d31;
+    -fx-text-fill: #e6e6e6;
+}
+.table-row-cell:odd {
+    -fx-background-color: #26282c;
+}
+.table-row-cell:selected {
+    -fx-background-color: #43A047;
+}
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+.table-cell {
+    -fx-text-fill: #e6e6e6;
+    -fx-border-color: transparent;
+}
+.table-view .placeholder .label {
+    -fx-text-fill: #7f858c;
+}
+
+/* ComboBox */
+.combo-box {
+    -fx-background-radius: 4;
+}
+.combo-box .list-cell {
+    -fx-text-fill: #e6e6e6;
+    -fx-background-color: #313338;
+}
+.combo-box-popup .list-view {
+    -fx-background-color: #313338;
+}
+.combo-box-popup .list-cell:filled:hover,
+.combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #43A047;
+    -fx-text-fill: white;
+}
+
+/* TextField / TextArea */
+.text-field, .text-area {
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-border-color: #3f4147;
+    -fx-background-color: #313338;
+    -fx-text-fill: #e6e6e6;
+    -fx-prompt-text-fill: #7f858c;
+}
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #66BB6A;
+}
+.text-area .content {
+    -fx-background-color: #313338;
+}
+
+/* TabPane */
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #1e1f22;
+}
+.tab-pane .tab {
+    -fx-background-color: #2b2d31;
+}
+.tab-pane .tab:selected {
+    -fx-background-color: #43A047;
+}
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: white;
+}
+.tab-pane .tab .tab-label {
+    -fx-text-fill: #b8bcc2;
+    -fx-font-weight: bold;
+}
+
+/* SplitPane */
+.split-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.split-pane > .split-pane-divider {
+    -fx-background-color: #3f4147;
+    -fx-padding: 0 2 0 2;
+}
+
+/* Diálogos */
+.dialog-pane {
+    -fx-background-color: #2b2d31;
+}
+.dialog-pane .label {
+    -fx-text-fill: #e6e6e6;
+}
+
+/* ScrollBars */
+.scroll-bar {
+    -fx-background-color: #1e1f22;
+}
+.scroll-bar .thumb {
+    -fx-background-color: #4a4d52;
+    -fx-background-radius: 4;
+}
+.scroll-bar .thumb:hover {
+    -fx-background-color: #5a5d62;
+}
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cerrajeria.controller.ProductoController"
+      spacing="10">
+
+    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Buscar:"/>
+        <TextField fx:id="txtBuscar" promptText="Nombre, marca, código, modelo..."
+                   prefWidth="280"/>
+        <Label text="Categoría:"/>
+        <ComboBox fx:id="cbFiltroCategoria" prefWidth="150"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnNuevo"    text="+ Nuevo"  onAction="#nuevo"
+                style="-fx-base: #4CAF50;"/>
+        <Button fx:id="btnEditar"   text="Editar"   onAction="#editar"/>
+        <Button fx:id="btnEliminar" text="Eliminar" onAction="#eliminar"
+                style="-fx-base: #E57373;"/>
+        <Button fx:id="btnRefrescar" text="⟳" onAction="#refrescar"/>
+    </HBox>
+
+    <TableView fx:id="tabla" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colCodigo"    text="Código"    prefWidth="100"/>
+            <TableColumn fx:id="colNombre"    text="Nombre"    prefWidth="280"/>
+            <TableColumn fx:id="colMarca"     text="Marca"     prefWidth="120"/>
+            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="130"/>
+            <TableColumn fx:id="colPrecio"    text="Precio"    prefWidth="110"/>
+            <TableColumn fx:id="colStock"     text="Stock"     prefWidth="80"/>
+        </columns>
+        <placeholder>
+            <Label text="No hay productos. Apretá '+ Nuevo' para agregar el primero."/>
+        </placeholder>
+    </TableView>
+</VBox>

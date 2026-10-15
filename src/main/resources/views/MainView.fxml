@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -12,18 +10,40 @@
     <top>
         <MenuBar>
             <menus>
-                <Menu text="Archivo"/>
-                <Menu text="Productos"/>
-                <Menu text="Presupuestos"/>
-                <Menu text="Ayuda"/>
+                <Menu text="Archivo">
+                    <items>
+                        <MenuItem text="Salir" onAction="#salir"/>
+                    </items>
+                </Menu>
+                <Menu text="Ayuda">
+                    <items>
+                        <MenuItem text="Acerca de" onAction="#acercaDe"/>
+                    </items>
+                </Menu>
             </menus>
         </MenuBar>
     </top>
 
     <center>
-        <Label text="¡La app arranca! 🎉"
-               style="-fx-font-size: 24px;"
-               BorderPane.alignment="CENTER"/>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Productos">
+                    <fx:include source="ProductoView.fxml"/>
+                </Tab>
+                <Tab text="Presupuestos">
+                    <fx:include source="PresupuestoView.fxml"/>
+                </Tab>
+            </tabs>
+        </TabPane>
     </center>
 
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <padding>
+                <javafx.geometry.Insets top="4" right="10" bottom="4" left="10"/>
+            </padding>
+            <Label text="Cerrajería — Lista de Precios"
+                   style="-fx-text-fill: #888; -fx-font-size: 11px;"/>
+        </HBox>
+    </bottom>
 </BorderPane>
