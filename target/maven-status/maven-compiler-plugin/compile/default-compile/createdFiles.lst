@@ -4,6 +4,7 @@ com/cerrajeria/controller/MainController.class
 com/cerrajeria/dao/PresupuestoDAO.class
 com/cerrajeria/dao/CategoriaDAO.class
 com/cerrajeria/model/Producto.class
+com/cerrajeria/util/ToggleSwitch.class
 com/cerrajeria/controller/PresupuestoController$4.class
 com/cerrajeria/controller/ProductoController$2.class
 com/cerrajeria/dao/ConexionDB.class

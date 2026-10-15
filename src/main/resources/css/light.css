@@ -101,3 +101,21 @@
     -fx-background-color: #e0e0e0;
     -fx-padding: 0 2 0 2;
 }
+
+/* ===== Toggle switch de tema ===== */
+.toggle-track {
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+}
+.toggle-track.off { -fx-background-color: #e0e0e0; }
+.toggle-track.on  { -fx-background-color: #2E7D32; -fx-border-color: #2E7D32; }
+
+.toggle-thumb {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 3, 0, 0, 1);
+}
+.toggle-thumb.off,
+.toggle-thumb.on { -fx-fill: white; }
+
+.theme-icon { -fx-font-size: 14px; }

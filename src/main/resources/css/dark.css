@@ -185,3 +185,21 @@
 .scroll-bar .decrement-button {
     -fx-background-color: transparent;
 }
+
+/* ===== Toggle switch de tema ===== */
+.toggle-track {
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #4a4d52;
+    -fx-border-width: 1;
+}
+.toggle-track.off { -fx-background-color: #3a3d42; }
+.toggle-track.on  { -fx-background-color: #43A047; -fx-border-color: #43A047; }
+
+.toggle-thumb {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 3, 0, 0, 1);
+}
+.toggle-thumb.off,
+.toggle-thumb.on { -fx-fill: #f0f0f0; }
+
+.theme-icon { -fx-font-size: 14px; }

@@ -1,17 +1,39 @@
 package com.cerrajeria.controller;
 
+import com.cerrajeria.util.Tema;
+import com.cerrajeria.util.ToggleSwitch;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-
-import com.cerrajeria.util.Tema;
+import javafx.scene.control.MenuBar;
 
 public class MainController {
 
   @FXML
+  private MenuBar menuBar;
+  @FXML
+  private ToggleSwitch themeSwitch;
+
+  @FXML
   public void initialize() {
-    // Por ahora no hay nada que inicializar acá.
-    // Los controllers de cada pestaña se inicializan solos.
+    // Arranca en el estado guardado sin disparar el toggle
+    boolean esOscuro = (Tema.getActual() == Tema.Modo.OSCURO);
+    themeSwitch.setSelectedSilent(esOscuro);
+
+    // Cuando el usuario lo mueve, cambia el tema
+    themeSwitch.setOnToggle(() -> Tema.alternar(menuBar.getScene()));
+  }
+
+  @FXML
+  private void temaClaro() {
+    Tema.aplicar(menuBar.getScene(), Tema.Modo.CLARO);
+    themeSwitch.setSelectedSilent(false);
+  }
+
+  @FXML
+  private void temaOscuro() {
+    Tema.aplicar(menuBar.getScene(), Tema.Modo.OSCURO);
+    themeSwitch.setSelectedSilent(true);
   }
 
   @FXML

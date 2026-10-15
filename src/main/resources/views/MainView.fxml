@@ -2,28 +2,46 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import com.cerrajeria.util.ToggleSwitch?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cerrajeria.controller.MainController">
 
     <top>
-        <MenuBar>
-            <menus>
-                <Menu text="Archivo">
-                    <items>
-                        <MenuItem text="Salir" onAction="#salir"/>
-                    </items>
-                </Menu>
-                <Menu text="Ayuda">
-                    <items>
-                        <MenuItem text="Acerca de" onAction="#acercaDe"/>
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
-    </top>
+        <HBox alignment="CENTER_LEFT" styleClass="top-bar">
+            <MenuBar fx:id="menuBar">
+                <menus>
+                    <Menu text="Archivo">
+                        <items>
+                            <MenuItem text="Salir" onAction="#salir"/>
+                        </items>
+                    </Menu>
+                    <Menu text="Ver">
+                        <items>
+                            <MenuItem text="Tema claro"  onAction="#temaClaro"/>
+                            <MenuItem text="Tema oscuro" onAction="#temaOscuro"/>
+                        </items>
+                    </Menu>
+                    <Menu text="Ayuda">
+                        <items>
+                            <MenuItem text="Acerca de" onAction="#acercaDe"/>
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
 
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox alignment="CENTER" spacing="8">
+                <padding><Insets top="4" right="12" bottom="4" left="12"/></padding>
+                <Label text="☀" styleClass="theme-icon"/>
+                <ToggleSwitch fx:id="themeSwitch"/>
+                <Label text="🌙" styleClass="theme-icon"/>
+            </HBox>
+        </HBox>
+    </top>
     <center>
         <TabPane tabClosingPolicy="UNAVAILABLE">
             <tabs>
