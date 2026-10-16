@@ -2,58 +2,58 @@
     -fx-font-family: "Inter", "Segoe UI", "Roboto", sans-serif;
     -fx-font-size: 13px;
 
-    /* Paleta oscura — sobreescribimos las variables de Modena */
-    -fx-base: #2b2d31;
-    -fx-background: #1e1f22;
-    -fx-control-inner-background: #313338;
-    -fx-control-inner-background-alt: #2b2d31;
-    -fx-text-background-color: #e6e6e6;
-    -fx-accent: #43A047;
-    -fx-focus-color: #66BB6A;
-    -fx-faint-focus-color: #66BB6A22;
-    -fx-selection-bar: #3a5a40;
-    -fx-selection-bar-non-focused: #3a4a3c;
+    /* Paleta navy oscuro con acentos dorados */
+    -fx-base: #1B2A4A;
+    -fx-background: #0F1E3D;
+    -fx-control-inner-background: #1B2A4A;
+    -fx-control-inner-background-alt: #172542;
+    -fx-text-background-color: #F5F5F5;
+    -fx-accent: #C9A227;
+    -fx-focus-color: #E0BE4F;
+    -fx-faint-focus-color: #E0BE4F22;
+    -fx-selection-bar: #3B5998;
+    -fx-selection-bar-non-focused: #2D4373;
     -fx-selection-bar-text: #ffffff;
-    -fx-border-color: #3f4147;
+    -fx-border-color: #2D4373;
 }
 
-/* Texto claro en todos los controles base */
+/* Texto claro */
 .label, .check-box, .radio-button {
-    -fx-text-fill: #e6e6e6;
+    -fx-text-fill: #F5F5F5;
 }
 
-/* Barra de menú */
+/* Barra de menú navy profundo */
 .menu-bar {
-    -fx-background-color: #1a1c1f;
+    -fx-background-color: #0A1730;
 }
 .menu-bar .label {
-    -fx-text-fill: #e6e6e6;
+    -fx-text-fill: #F5F5F5;
 }
 .menu-bar .menu:hover,
 .menu-bar .menu:showing {
-    -fx-background-color: #2b2d31;
+    -fx-background-color: #1B2A4A;
 }
 
 /* Popup de menú */
 .context-menu {
-    -fx-background-color: #2b2d31;
-    -fx-border-color: #3f4147;
+    -fx-background-color: #1B2A4A;
+    -fx-border-color: #2D4373;
 }
 .menu-item .label {
-    -fx-text-fill: #e6e6e6;
+    -fx-text-fill: #F5F5F5;
 }
 .menu-item:focused {
-    -fx-background-color: #43A047;
+    -fx-background-color: #C9A227;
 }
 .menu-item:focused .label {
-    -fx-text-fill: white;
+    -fx-text-fill: #0F1E3D;
 }
 
 /* Títulos */
 .label-title {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #a5d6a7;
+    -fx-text-fill: #E0BE4F;
 }
 
 /* Botones */
@@ -68,37 +68,37 @@
 
 /* Tablas */
 .table-view {
-    -fx-border-color: #3f4147;
+    -fx-border-color: #2D4373;
     -fx-border-radius: 4;
     -fx-background-radius: 4;
-    -fx-background-color: #2b2d31;
+    -fx-background-color: #1B2A4A;
 }
 .table-view .column-header {
-    -fx-background-color: #232629;
+    -fx-background-color: #0F1E3D;
 }
 .table-view .column-header .label {
-    -fx-text-fill: #a5d6a7;
+    -fx-text-fill: #E0BE4F;
     -fx-font-weight: bold;
 }
 .table-row-cell {
-    -fx-background-color: #2b2d31;
-    -fx-text-fill: #e6e6e6;
+    -fx-background-color: #1B2A4A;
+    -fx-text-fill: #F5F5F5;
 }
 .table-row-cell:odd {
-    -fx-background-color: #26282c;
+    -fx-background-color: #172542;
 }
 .table-row-cell:selected {
-    -fx-background-color: #43A047;
+    -fx-background-color: #3B5998;
 }
 .table-row-cell:selected .table-cell {
     -fx-text-fill: white;
 }
 .table-cell {
-    -fx-text-fill: #e6e6e6;
+    -fx-text-fill: #F5F5F5;
     -fx-border-color: transparent;
 }
 .table-view .placeholder .label {
-    -fx-text-fill: #7f858c;
+    -fx-text-fill: #B8C1D9;
 }
 
 /* ComboBox */
@@ -106,15 +106,15 @@
     -fx-background-radius: 4;
 }
 .combo-box .list-cell {
-    -fx-text-fill: #e6e6e6;
-    -fx-background-color: #313338;
+    -fx-text-fill: #F5F5F5;
+    -fx-background-color: #1B2A4A;
 }
 .combo-box-popup .list-view {
-    -fx-background-color: #313338;
+    -fx-background-color: #1B2A4A;
 }
 .combo-box-popup .list-cell:filled:hover,
 .combo-box-popup .list-cell:filled:selected {
-    -fx-background-color: #43A047;
+    -fx-background-color: #3B5998;
     -fx-text-fill: white;
 }
 
@@ -122,33 +122,33 @@
 .text-field, .text-area {
     -fx-background-radius: 4;
     -fx-border-radius: 4;
-    -fx-border-color: #3f4147;
-    -fx-background-color: #313338;
-    -fx-text-fill: #e6e6e6;
-    -fx-prompt-text-fill: #7f858c;
+    -fx-border-color: #2D4373;
+    -fx-background-color: #1B2A4A;
+    -fx-text-fill: #F5F5F5;
+    -fx-prompt-text-fill: #B8C1D9;
 }
 .text-field:focused, .text-area:focused {
-    -fx-border-color: #66BB6A;
+    -fx-border-color: #E0BE4F;
 }
 .text-area .content {
-    -fx-background-color: #313338;
+    -fx-background-color: #1B2A4A;
 }
 
 /* TabPane */
 .tab-pane .tab-header-area .tab-header-background {
-    -fx-background-color: #1e1f22;
+    -fx-background-color: #0F1E3D;
 }
 .tab-pane .tab {
-    -fx-background-color: #2b2d31;
+    -fx-background-color: #1B2A4A;
 }
 .tab-pane .tab:selected {
-    -fx-background-color: #43A047;
+    -fx-background-color: #C9A227;
 }
 .tab-pane .tab:selected .tab-label {
-    -fx-text-fill: white;
+    -fx-text-fill: #0F1E3D;
 }
 .tab-pane .tab .tab-label {
-    -fx-text-fill: #b8bcc2;
+    -fx-text-fill: #B8C1D9;
     -fx-font-weight: bold;
 }
 
@@ -158,28 +158,28 @@
     -fx-padding: 0;
 }
 .split-pane > .split-pane-divider {
-    -fx-background-color: #3f4147;
+    -fx-background-color: #2D4373;
     -fx-padding: 0 2 0 2;
 }
 
 /* Diálogos */
 .dialog-pane {
-    -fx-background-color: #2b2d31;
+    -fx-background-color: #1B2A4A;
 }
 .dialog-pane .label {
-    -fx-text-fill: #e6e6e6;
+    -fx-text-fill: #F5F5F5;
 }
 
 /* ScrollBars */
 .scroll-bar {
-    -fx-background-color: #1e1f22;
+    -fx-background-color: #0F1E3D;
 }
 .scroll-bar .thumb {
-    -fx-background-color: #4a4d52;
+    -fx-background-color: #2D4373;
     -fx-background-radius: 4;
 }
 .scroll-bar .thumb:hover {
-    -fx-background-color: #5a5d62;
+    -fx-background-color: #3B5998;
 }
 .scroll-bar .increment-button,
 .scroll-bar .decrement-button {
@@ -190,16 +190,21 @@
 .toggle-track {
     -fx-background-radius: 12;
     -fx-border-radius: 12;
-    -fx-border-color: #4a4d52;
+    -fx-border-color: #2D4373;
     -fx-border-width: 1;
 }
-.toggle-track.off { -fx-background-color: #3a3d42; }
-.toggle-track.on  { -fx-background-color: #43A047; -fx-border-color: #43A047; }
+.toggle-track.off { -fx-background-color: #2D4373; }
+.toggle-track.on  { -fx-background-color: #C9A227; -fx-border-color: #C9A227; }
 
 .toggle-thumb {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 3, 0, 0, 1);
 }
 .toggle-thumb.off,
-.toggle-thumb.on { -fx-fill: #f0f0f0; }
+.toggle-thumb.on { -fx-fill: #F5F5F5; }
 
 .theme-icon { -fx-font-size: 14px; }
+
+/* ===== Dorado para branding ===== */
+.label-gold {
+    -fx-text-fill: #C9A227;
+}
