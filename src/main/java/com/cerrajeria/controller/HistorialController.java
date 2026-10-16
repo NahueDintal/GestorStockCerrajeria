@@ -12,9 +12,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.time.format.DateTimeFormatter;
+import com.cerrajeria.util.AbrirArchivo;
 
 public class HistorialController {
 
@@ -143,8 +143,7 @@ public class HistorialController {
         return;
 
       PresupuestoPDF.generar(full, destino);
-      if (Desktop.isDesktopSupported())
-        Desktop.getDesktop().open(destino);
+      AbrirArchivo.abrir(destino); // ← reemplaza Desktop.open
     } catch (Exception e) {
       e.printStackTrace();
     }

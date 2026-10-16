@@ -18,9 +18,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.util.converter.IntegerStringConverter;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.util.ArrayList;
+import com.cerrajeria.util.AbrirArchivo; // ✅
 
 public class PresupuestoController {
 
@@ -265,18 +265,6 @@ public class PresupuestoController {
           "Agregá productos antes de exportar.");
       return;
     }
-    if (Desktop.isDesktopSupported())
-      Desktop.getDesktop().open(destino);
-    // Abrimos el PDF en un hilo aparte para no bloquear el thread de JavaFX
-    new Thread(() -> {
-      try {
-        if (Desktop.isDesktopSupported()) {
-          Desktop.getDesktop().open(destino);
-        }
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    }, "abrir-pdf").start();
 
     FileChooser fc = new FileChooser();
     fc.setTitle("Guardar presupuesto como PDF");
@@ -288,23 +276,28 @@ public class PresupuestoController {
     if (destino == null)
       return;
 
+    Presupuesto p = new Presupuesto();
     try {
-      Presupuesto p = new Presupuesto();
       p.setNumero(Integer.parseInt(lblNumero.getText().replaceAll("[^0-9]", "")));
-      p.setClienteNombre(txtClienteNombre.getText());
-      p.setClienteTelefono(txtClienteTelefono.getText());
-      p.setDescuentoGlobal(parseDouble(txtDescuentoGlobal.getText()));
-      p.setObservaciones(txtObservaciones.getText());
-      p.setItems(new ArrayList<>(carrito));
+    } catch (NumberFormatException ex) {
+      p.setNumero(0);
+    }
+    p.setClienteNombre(txtClienteNombre.getText());
+    p.setClienteTelefono(txtClienteTelefono.getText());
+    p.setDescuentoGlobal(parseDouble(txtDescuentoGlobal.getText()));
+    p.setObservaciones(txtObservaciones.getText());
+    p.setItems(new ArrayList<>(carrito));
 
-      PresupuestoPDF.generar(p, destino);
-
-      if (Desktop.isDesktopSupported())
-        Desktop.getDesktop().open(destino);
+    try {
+      PresupuestoPDF.generar(p, destino); // ← en el FX thread, es rápido
     } catch (Exception e) {
       e.printStackTrace();
-      alerta(Alert.AlertType.ERROR, "Error al generar PDF", e.getMessage());
+      alerta(Alert.AlertType.ERROR, "Error al generar PDF",
+          e.getMessage() == null ? e.toString() : e.getMessage());
+      return;
     }
+
+    AbrirArchivo.abrir(destino); // ← sin AWT, sin freeze
   }
 
   @FXML

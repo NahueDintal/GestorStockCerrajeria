@@ -12,6 +12,8 @@ public class MainApp extends Application {
 
   @Override
   public void start(Stage stage) throws Exception {
+
+    System.setProperty("java.awt.headless", "true");
     FXMLLoader loader = new FXMLLoader(
         getClass().getResource("/views/MainView.fxml"));
 
@@ -31,6 +33,7 @@ public class MainApp extends Application {
   }
 
   public static void main(String[] args) {
+
     launch(args);
   }
 }
