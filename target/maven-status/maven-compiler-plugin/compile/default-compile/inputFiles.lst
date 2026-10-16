@@ -16,6 +16,7 @@
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/model/Proveedor.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/AbrirArchivo.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/ImportadorProductos.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/ImportadorX28.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/PresupuestoPDF.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/Tema.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/ToggleSwitch.java

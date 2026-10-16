@@ -1,6 +1,7 @@
 package com.cerrajeria.controller;
 
 import com.cerrajeria.util.ImportadorProductos;
+import com.cerrajeria.util.ImportadorX28;
 import com.cerrajeria.util.Tema;
 import com.cerrajeria.util.ToggleSwitch;
 import com.cerrajeria.dao.ProveedorDAO;
@@ -34,10 +35,11 @@ public class MainController {
   @FXML
   private TabPane tabPane;
 
-  // JavaFX inyecta automáticamente el controller del fx:include
-  // cuando el id del include termina en "Controller"
+  // Controllers inyectados por JavaFX a partir de los fx:include
   @FXML
   private HistorialController historialViewController;
+  @FXML
+  private ProductoController productoViewController; // ← NUEVO
 
   @FXML
   public void initialize() {
@@ -45,7 +47,6 @@ public class MainController {
     themeSwitch.setSelectedSilent(esOscuro);
     themeSwitch.setOnToggle(() -> Tema.alternar(menuBar.getScene()));
 
-    // 👇 Refresca el historial cada vez que entrás a esa pestaña
     tabPane.getSelectionModel().selectedItemProperty().addListener(
         (obs, vieja, nueva) -> {
           if (nueva != null && "Historial".equals(nueva.getText())
@@ -83,10 +84,15 @@ public class MainController {
 
   @FXML
   private void importarCSV() {
-    // 1) Elegir archivo
+    // 1) Elegir archivo — acepta .csv y .txt (X-28)
     FileChooser fc = new FileChooser();
-    fc.setTitle("Seleccionar CSV de productos");
-    fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV", "*.csv"));
+    fc.setTitle("Seleccionar lista de precios");
+    fc.getExtensionFilters().addAll(
+        new FileChooser.ExtensionFilter("Listas (*.csv, *.txt)", "*.csv", "*.txt"),
+        new FileChooser.ExtensionFilter("Solo CSV", "*.csv"),
+        new FileChooser.ExtensionFilter("Solo TXT (X-28)", "*.txt"),
+        new FileChooser.ExtensionFilter("Todos", "*.*"));
+
     File archivo = fc.showOpenDialog(menuBar.getScene().getWindow());
     if (archivo == null)
       return;
@@ -98,20 +104,44 @@ public class MainController {
       if (proveedor == null)
         return;
 
-      // 3) Importar
-      ImportadorProductos.Resultado r = ImportadorProductos.importar(archivo, proveedor);
+      // 3) Detectar parser según archivo y/o proveedor
+      ImportadorProductos.Resultado r;
+      String nombreArchivo = archivo.getName().toLowerCase();
+      String nombreProv = proveedor.getNombre() == null
+          ? ""
+          : proveedor.getNombre().toLowerCase();
 
+      boolean esX28 = nombreArchivo.endsWith(".txt")
+          || nombreArchivo.contains("x28")
+          || nombreArchivo.contains("x-28")
+          || nombreProv.contains("x28")
+          || nombreProv.contains("x-28");
+
+      if (esX28) {
+        System.out.println("▶ Usando parser X-28 para: " + archivo.getName());
+        r = ImportadorX28.importar(archivo, proveedor);
+      } else {
+        System.out.println("▶ Usando importador CSV genérico para: " + archivo.getName());
+        r = ImportadorProductos.importar(archivo, proveedor);
+      }
+
+      // 4) Mostrar resultado
       Alert ok = new Alert(Alert.AlertType.INFORMATION);
       ok.setTitle("Importación terminada");
       ok.setHeaderText("Proveedor: " + proveedor.getNombre());
       ok.setContentText(r.toString());
       ok.showAndWait();
+
+      // 5) Refrescar la tabla de productos
+      if (productoViewController != null) {
+        productoViewController.refrescar();
+      }
     } catch (Exception e) {
       e.printStackTrace();
       Alert err = new Alert(Alert.AlertType.ERROR);
       err.setTitle("Error al importar");
       err.setHeaderText(null);
-      err.setContentText(e.getMessage());
+      err.setContentText(e.getMessage() == null ? e.toString() : e.getMessage());
       err.showAndWait();
     }
   }
@@ -170,7 +200,6 @@ public class MainController {
     dlg.getDialogPane().setContent(grid);
     dlg.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-    // Deshabilitar OK si no hay nombre
     Node okBtn = dlg.getDialogPane().lookupButton(ButtonType.OK);
     okBtn.setDisable(true);
     txtNombre.textProperty().addListener((o, a, b) -> okBtn.setDisable(b == null || b.isBlank()));

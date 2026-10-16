@@ -51,7 +51,7 @@
         <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
             <tabs>
                 <Tab text="Productos">
-                    <fx:include source="ProductoView.fxml"/>
+                    <fx:include source="ProductoView.fxml" fx:id="productoView" />
                 </Tab>
                 <Tab text="Presupuestos">
                     <fx:include source="PresupuestoView.fxml"/>
