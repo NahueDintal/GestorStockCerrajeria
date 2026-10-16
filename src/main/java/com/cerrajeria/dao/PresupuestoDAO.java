@@ -23,67 +23,64 @@ public class PresupuestoDAO {
   }
 
   public int guardar(Presupuesto p) throws SQLException {
-    Connection cn = ConexionDB.getConexion();
-    try {
+    try (Connection cn = ConexionDB.getConexion()) {
       cn.setAutoCommit(false);
+      try {
+        // 1) Insertar cabecera
+        String sqlP = """
+                INSERT INTO presupuesto
+                (numero, fecha, validez_hasta, cliente_nombre, cliente_telefono,
+                 descuento_global, observaciones, total)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """;
+        int presupuestoId;
+        try (PreparedStatement ps = cn.prepareStatement(sqlP, Statement.RETURN_GENERATED_KEYS)) {
+          ps.setInt(1, p.getNumero());
+          ps.setDate(2, Date.valueOf(p.getFecha()));
+          ps.setDate(3, p.getValidezHasta() == null ? null
+              : Date.valueOf(p.getValidezHasta()));
+          ps.setString(4, p.getClienteNombre());
+          ps.setString(5, p.getClienteTelefono());
+          ps.setDouble(6, p.getDescuentoGlobal());
+          ps.setString(7, p.getObservaciones());
+          ps.setDouble(8, p.getTotal());
+          ps.executeUpdate();
 
-      // 1) Insertar cabecera
-      String sqlP = """
-              INSERT INTO presupuesto
-              (numero, fecha, validez_hasta, cliente_nombre, cliente_telefono,
-               descuento_global, observaciones, total)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-          """;
-      int presupuestoId;
-      try (PreparedStatement ps = cn.prepareStatement(sqlP, Statement.RETURN_GENERATED_KEYS)) {
-        ps.setInt(1, p.getNumero());
-        ps.setDate(2, Date.valueOf(p.getFecha()));
-        ps.setDate(3, p.getValidezHasta() == null ? null
-            : Date.valueOf(p.getValidezHasta()));
-        ps.setString(4, p.getClienteNombre());
-        ps.setString(5, p.getClienteTelefono());
-        ps.setDouble(6, p.getDescuentoGlobal());
-        ps.setString(7, p.getObservaciones());
-        ps.setDouble(8, p.getTotal());
-        ps.executeUpdate();
-
-        try (ResultSet rs = ps.getGeneratedKeys()) {
-          rs.next();
-          presupuestoId = rs.getInt(1);
+          try (ResultSet rs = ps.getGeneratedKeys()) {
+            rs.next();
+            presupuestoId = rs.getInt(1);
+          }
         }
-      }
 
-      // 2) Insertar items
-      String sqlI = """
-              INSERT INTO presupuesto_item
-              (presupuesto_id, producto_id, cantidad, precio_unitario, descuento_item)
-              VALUES (?, ?, ?, ?, ?)
-          """;
-      try (PreparedStatement ps = cn.prepareStatement(sqlI)) {
-        for (ItemPresupuesto it : p.getItems()) {
-          ps.setInt(1, presupuestoId);
-          ps.setInt(2, it.getProducto().getId());
-          ps.setInt(3, it.getCantidad());
-          ps.setDouble(4, it.getPrecioUnitario());
-          ps.setDouble(5, it.getDescuentoItem());
-          ps.addBatch();
+        // 2) Insertar items
+        String sqlI = """
+                INSERT INTO presupuesto_item
+                (presupuesto_id, producto_id, cantidad, precio_unitario, descuento_item)
+                VALUES (?, ?, ?, ?, ?)
+            """;
+        try (PreparedStatement ps = cn.prepareStatement(sqlI)) {
+          for (ItemPresupuesto it : p.getItems()) {
+            ps.setInt(1, presupuestoId);
+            ps.setInt(2, it.getProducto().getId());
+            ps.setInt(3, it.getCantidad());
+            ps.setDouble(4, it.getPrecioUnitario());
+            ps.setDouble(5, it.getDescuentoItem());
+            ps.addBatch();
+          }
+          ps.executeBatch();
         }
-        ps.executeBatch();
+
+        cn.commit();
+        p.setId(presupuestoId);
+        return presupuestoId;
+
+      } catch (SQLException e) {
+        cn.rollback();
+        throw e;
       }
-
-      cn.commit();
-      p.setId(presupuestoId);
-      return presupuestoId;
-
-    } catch (SQLException e) {
-      cn.rollback();
-      throw e;
-    } finally {
-      cn.setAutoCommit(true);
     }
   }
 
-  // Para listar historial (más adelante)
   public List<Presupuesto> listar() throws SQLException {
     String sql = "SELECT * FROM presupuesto ORDER BY fecha DESC, numero DESC";
     List<Presupuesto> lista = new ArrayList<>();
