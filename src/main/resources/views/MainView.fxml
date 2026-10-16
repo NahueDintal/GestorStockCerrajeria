@@ -17,6 +17,11 @@
                         <items>
                             <MenuItem text="Salir" onAction="#salir"/>
                         </items>
+                        <items>
+                            <MenuItem text="Importar productos desde CSV…" onAction="#importarCSV"/>
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Salir" onAction="#salir"/>
+                        </items>
                     </Menu>
                     <Menu text="Ver">
                         <items>
