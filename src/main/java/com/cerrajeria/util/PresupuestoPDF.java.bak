@@ -1,0 +1,238 @@
+package com.cerrajeria.util;
+
+import com.cerrajeria.model.ItemPresupuesto;
+import com.cerrajeria.model.Presupuesto;
+import com.lowagie.text.*;
+import com.lowagie.text.Font;
+import com.lowagie.text.Image;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import io.github.cdimascio.dotenv.Dotenv;
+
+import java.awt.Color;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.time.format.DateTimeFormatter;
+
+public class PresupuestoPDF {
+
+  private static final Dotenv env = Dotenv.configure().ignoreIfMissing().load();
+  private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+  // ===== Paleta navy + dorado (coherente con el tema claro) =====
+  private static final Color NAVY = new Color(27, 42, 74); // #1B2A4A
+  private static final Color NAVY_CLARO = new Color(232, 237, 247); // #E8EDF7
+  private static final Color DORADO = new Color(201, 162, 39); // #C9A227
+  private static final Color GRIS_TXT = new Color(120, 120, 120);
+  private static final Color BLANCO = Color.WHITE;
+  private static final Color GRIS_SUAVE = new Color(90, 90, 90);
+
+  public static void generar(Presupuesto p, File destino) throws Exception {
+    Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
+    PdfWriter.getInstance(doc, new FileOutputStream(destino));
+    doc.open();
+
+    // ===== Encabezado =====
+    PdfPTable header = new PdfPTable(new float[] { 3, 2 });
+    header.setWidthPercentage(100);
+
+    PdfPCell cEmpresa = new PdfPCell();
+    cEmpresa.setBorder(Rectangle.NO_BORDER);
+    cEmpresa.addElement(new Paragraph(
+        env.get("EMPRESA_NOMBRE", "Cerrajería"),
+        new Font(Font.HELVETICA, 16, Font.BOLD, NAVY)));
+    cEmpresa.addElement(new Paragraph(
+        env.get("EMPRESA_DIRECCION", ""),
+        new Font(Font.HELVETICA, 10, Font.NORMAL, GRIS_SUAVE)));
+    cEmpresa.addElement(new Paragraph(
+        "Tel: " + env.get("EMPRESA_TELEFONO", "") +
+            "  |  " + env.get("EMPRESA_EMAIL", ""),
+        new Font(Font.HELVETICA, 10, Font.NORMAL, GRIS_SUAVE)));
+    cEmpresa.addElement(new Paragraph(
+        "CUIT: " + env.get("EMPRESA_CUIT", ""),
+        new Font(Font.HELVETICA, 10, Font.NORMAL, GRIS_SUAVE)));
+    header.addCell(cEmpresa);
+
+    PdfPCell cPresu = new PdfPCell();
+    cPresu.setBorder(Rectangle.NO_BORDER);
+    cPresu.setHorizontalAlignment(Element.ALIGN_RIGHT);
+    Paragraph titulo = new Paragraph("PRESUPUESTO",
+        new Font(Font.HELVETICA, 18, Font.BOLD, NAVY));
+    titulo.setAlignment(Element.ALIGN_RIGHT);
+    cPresu.addElement(titulo);
+
+    Paragraph num = new Paragraph("N° " + p.getNumero(),
+        new Font(Font.HELVETICA, 14, Font.BOLD, DORADO));
+    num.setAlignment(Element.ALIGN_RIGHT);
+    cPresu.addElement(num);
+
+    Paragraph fecha = new Paragraph(
+        "Fecha: " + p.getFecha().format(FMT),
+        new Font(Font.HELVETICA, 10, Font.NORMAL, GRIS_SUAVE));
+    fecha.setAlignment(Element.ALIGN_RIGHT);
+    cPresu.addElement(fecha);
+
+    if (p.getValidezHasta() != null) {
+      Paragraph val = new Paragraph(
+          "Válido hasta: " + p.getValidezHasta().format(FMT),
+          new Font(Font.HELVETICA, 10, Font.NORMAL, GRIS_SUAVE));
+      val.setAlignment(Element.ALIGN_RIGHT);
+      cPresu.addElement(val);
+    }
+    header.addCell(cPresu);
+
+    doc.add(header);
+
+    // Línea dorada de separación bajo el encabezado
+    PdfPTable linea = new PdfPTable(1);
+    linea.setWidthPercentage(100);
+    PdfPCell cLinea = new PdfPCell();
+    cLinea.setBorder(Rectangle.NO_BORDER);
+    cLinea.setBackgroundColor(DORADO);
+    cLinea.setFixedHeight(2f);
+    linea.addCell(cLinea);
+    doc.add(linea);
+    doc.add(new Paragraph(" "));
+
+    // ===== Datos del cliente =====
+    if (p.getClienteNombre() != null && !p.getClienteNombre().isBlank()) {
+      PdfPTable cli = new PdfPTable(1);
+      cli.setWidthPercentage(100);
+      PdfPCell c = new PdfPCell();
+      c.setBackgroundColor(NAVY_CLARO);
+      c.setPadding(8);
+      c.setBorder(Rectangle.NO_BORDER);
+      c.addElement(new Paragraph("Cliente: " + p.getClienteNombre(),
+          new Font(Font.HELVETICA, 11, Font.BOLD, NAVY)));
+      if (p.getClienteTelefono() != null && !p.getClienteTelefono().isBlank()) {
+        c.addElement(new Paragraph("Teléfono: " + p.getClienteTelefono(),
+            new Font(Font.HELVETICA, 10, Font.NORMAL, GRIS_SUAVE)));
+      }
+      cli.addCell(c);
+      doc.add(cli);
+      doc.add(new Paragraph(" "));
+    }
+
+    // ===== Tabla de ítems =====
+    PdfPTable tabla = new PdfPTable(new float[] { 1, 5, 2, 2 });
+    tabla.setWidthPercentage(100);
+
+    String[] headers = { "Cant.", "Producto", "P. Unit.", "Subtotal" };
+    for (String h : headers) {
+      PdfPCell hc = new PdfPCell(new Paragraph(h,
+          new Font(Font.HELVETICA, 10, Font.BOLD, BLANCO)));
+      hc.setBackgroundColor(NAVY);
+      hc.setPadding(6);
+      hc.setHorizontalAlignment(Element.ALIGN_CENTER);
+      hc.setBorderColor(NAVY);
+      tabla.addCell(hc);
+    }
+
+    Font normal = new Font(Font.HELVETICA, 10);
+    for (ItemPresupuesto it : p.getItems()) {
+      PdfPCell c1 = new PdfPCell(new Paragraph(String.valueOf(it.getCantidad()), normal));
+      c1.setPadding(5);
+      c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+      c1.setBorderColor(NAVY_CLARO);
+      tabla.addCell(c1);
+
+      String desc = it.getProducto().getNombre();
+      if (it.getProducto().getMarca() != null
+          && !it.getProducto().getMarca().isBlank()) {
+        desc += " — " + it.getProducto().getMarca();
+      }
+      PdfPCell c2 = new PdfPCell(new Paragraph(desc, normal));
+      c2.setPadding(5);
+      c2.setBorderColor(NAVY_CLARO);
+      tabla.addCell(c2);
+
+      PdfPCell c3 = new PdfPCell(new Paragraph(
+          String.format("$%.2f", it.getPrecioUnitario()), normal));
+      c3.setPadding(5);
+      c3.setHorizontalAlignment(Element.ALIGN_RIGHT);
+      c3.setBorderColor(NAVY_CLARO);
+      tabla.addCell(c3);
+
+      PdfPCell c4 = new PdfPCell(new Paragraph(
+          String.format("$%.2f", it.getSubtotal()), normal));
+      c4.setPadding(5);
+      c4.setHorizontalAlignment(Element.ALIGN_RIGHT);
+      c4.setBorderColor(NAVY_CLARO);
+      tabla.addCell(c4);
+    }
+    doc.add(tabla);
+
+    // ===== Totales =====
+    doc.add(new Paragraph(" "));
+    PdfPTable tot = new PdfPTable(new float[] { 3, 2 });
+    tot.setWidthPercentage(65);
+    tot.setHorizontalAlignment(Element.ALIGN_RIGHT);
+
+    Font bold = new Font(Font.HELVETICA, 11, Font.BOLD, NAVY);
+    Font boldNavy = new Font(Font.HELVETICA, 13, Font.BOLD, NAVY);
+    Font boldDorado = new Font(Font.HELVETICA, 13, Font.BOLD, DORADO);
+
+    tot.addCell(celdaSinBorde("Subtotal:", bold));
+    tot.addCell(celdaDerecha(String.format("$%.2f", p.getSubtotal()), normal));
+
+    if (p.getDescuentoGlobal() > 0) {
+      tot.addCell(celdaSinBorde("Descuento (" + p.getDescuentoGlobal() + "%):", bold));
+      double desc = p.getSubtotal() * p.getDescuentoGlobal() / 100.0;
+      tot.addCell(celdaDerecha("- $" + String.format("%.2f", desc), normal));
+    }
+
+    // TOTAL destacado: fondo navy claro, texto navy + valor dorado
+    PdfPCell cTotalLbl = new PdfPCell(new Paragraph("TOTAL:", boldNavy));
+    cTotalLbl.setBackgroundColor(NAVY_CLARO);
+    cTotalLbl.setBorder(Rectangle.NO_BORDER);
+    cTotalLbl.setPadding(6);
+    tot.addCell(cTotalLbl);
+
+    PdfPCell cTotalVal = new PdfPCell(new Paragraph(
+        String.format("$%.2f", p.getTotal()), boldDorado));
+    cTotalVal.setBackgroundColor(NAVY_CLARO);
+    cTotalVal.setBorder(Rectangle.NO_BORDER);
+    cTotalVal.setPadding(6);
+    cTotalVal.setHorizontalAlignment(Element.ALIGN_RIGHT);
+    cTotalVal.setNoWrap(true); // ← CLAVE: nunca parte el número
+    tot.addCell(cTotalVal);
+
+    doc.add(tot);
+
+    // ===== Observaciones =====
+    if (p.getObservaciones() != null && !p.getObservaciones().isBlank()) {
+      doc.add(new Paragraph(" "));
+      doc.add(new Paragraph("Observaciones:",
+          new Font(Font.HELVETICA, 10, Font.BOLD, NAVY)));
+      doc.add(new Paragraph(p.getObservaciones(),
+          new Font(Font.HELVETICA, 10, Font.NORMAL, GRIS_SUAVE)));
+    }
+
+    doc.add(new Paragraph(" "));
+    Paragraph pie = new Paragraph(
+        "Presupuesto sujeto a disponibilidad de stock. " +
+            "Precios pueden variar sin previo aviso pasado el plazo de validez.",
+        new Font(Font.HELVETICA, 8, Font.ITALIC, GRIS_TXT));
+    pie.setAlignment(Element.ALIGN_CENTER);
+    doc.add(pie);
+
+    doc.close();
+  }
+
+  private static PdfPCell celdaSinBorde(String texto, Font f) {
+    PdfPCell c = new PdfPCell(new Paragraph(texto, f));
+    c.setBorder(Rectangle.NO_BORDER);
+    c.setPadding(4);
+    return c;
+  }
+
+  private static PdfPCell celdaDerecha(String texto, Font f) {
+    PdfPCell c = new PdfPCell(new Paragraph(texto, f));
+    c.setBorder(Rectangle.NO_BORDER);
+    c.setPadding(4);
+    c.setHorizontalAlignment(Element.ALIGN_RIGHT);
+    return c;
+  }
+}
