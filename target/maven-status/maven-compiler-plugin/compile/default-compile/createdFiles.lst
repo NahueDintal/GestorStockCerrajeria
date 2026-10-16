@@ -7,9 +7,11 @@ com/cerrajeria/dao/CategoriaDAO.class
 com/cerrajeria/model/Producto.class
 com/cerrajeria/util/ToggleSwitch.class
 com/cerrajeria/controller/PresupuestoController$4.class
+com/cerrajeria/model/Proveedor.class
 com/cerrajeria/controller/ProductoController$2.class
 com/cerrajeria/dao/ConexionDB.class
 com/cerrajeria/util/Tema.class
+com/cerrajeria/dao/ProveedorDAO.class
 com/cerrajeria/dao/ProductoDAO.class
 com/cerrajeria/controller/PresupuestoController$1.class
 com/cerrajeria/model/Categoria.class
@@ -18,8 +20,8 @@ com/cerrajeria/controller/HistorialController.class
 com/cerrajeria/controller/PresupuestoController$3.class
 com/cerrajeria/util/ImportadorProductos$Resultado.class
 com/cerrajeria/controller/ProductoController.class
-com/cerrajeria/model/Presupuesto.class
 com/cerrajeria/MainApp.class
+com/cerrajeria/model/Presupuesto.class
 com/cerrajeria/controller/HistorialController$1.class
 com/cerrajeria/controller/ProductoFormController.class
 com/cerrajeria/util/Tema$Modo.class

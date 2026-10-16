@@ -78,3 +78,16 @@ INSERT IGNORE INTO categoria (nombre) VALUES
     ('Cerradura'), ('Candado'), ('Cilindro'), ('Llave'),
     ('Cámara'), ('Alarma'), ('Control de acceso'),
     ('Accesorio'), ('Herramienta'), ('Otro');
+
+
+CREATE TABLE IF NOT EXISTS proveedor (
+    id                INT AUTO_INCREMENT PRIMARY KEY,
+    nombre            VARCHAR(80) NOT NULL UNIQUE,
+    iva_porcentaje    DECIMAL(5,2) NOT NULL DEFAULT 21.00,
+    markup_porcentaje DECIMAL(5,2) NOT NULL DEFAULT 50.00,
+    observaciones     VARCHAR(255)
+) ENGINE=InnoDB;
+
+-- Tu primer proveedor
+INSERT IGNORE INTO proveedor (nombre, iva_porcentaje, markup_porcentaje)
+VALUES ('COSQUIN HERRAJES', 21.00, 50.00);

@@ -8,10 +8,12 @@
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/dao/ConexionDB.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/dao/PresupuestoDAO.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/dao/ProductoDAO.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/dao/ProveedorDAO.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/model/Categoria.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/model/ItemPresupuesto.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/model/Presupuesto.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/model/Producto.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/model/Proveedor.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/ImportadorProductos.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/PresupuestoPDF.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/Tema.java

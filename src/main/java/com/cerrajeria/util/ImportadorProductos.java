@@ -5,6 +5,7 @@ import com.cerrajeria.dao.ConexionDB;
 import com.cerrajeria.dao.ProductoDAO;
 import com.cerrajeria.model.Categoria;
 import com.cerrajeria.model.Producto;
+import com.cerrajeria.model.Proveedor;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -35,10 +36,24 @@ public class ImportadorProductos {
     }
   }
 
-  public static Resultado importar(File csv) throws Exception {
+  /**
+   * Importa productos desde un CSV.
+   * El precio de venta se calcula con los porcentajes del proveedor.
+   */
+  public static Resultado importar(File csv, Proveedor proveedor) throws Exception {
     Resultado r = new Resultado();
     Map<String, Integer> categorias = asegurarCategorias();
 
+    // Info del proveedor en consola
+    double factor = (1 + proveedor.getIvaPorcentaje() / 100.0)
+        * (1 + proveedor.getMarkupPorcentaje() / 100.0);
+    System.out.println("🏭 Proveedor: " + proveedor.getNombre());
+    System.out.println("   IVA:    " + proveedor.getIvaPorcentaje() + "%");
+    System.out.println("   Markup: " + proveedor.getMarkupPorcentaje() + "%");
+    System.out.printf("   → Precio final = costo × %.3f (ganancia %.1f%% sobre costo)%n",
+        factor, (factor - 1) * 100);
+
+    // Cache de modelos ya existentes
     Set<String> modelosExistentes = new HashSet<>();
     try (Connection cn = ConexionDB.getConexion();
         PreparedStatement ps = cn.prepareStatement(
@@ -49,7 +64,7 @@ public class ImportadorProductos {
     }
     System.out.println("📦 Modelos ya en base: " + modelosExistentes.size());
 
-    // Leer TODO el archivo primero para detectar el separador
+    // Leer todas las líneas para detectar separador
     List<String> lineas = new ArrayList<>();
     try (BufferedReader br = new BufferedReader(new InputStreamReader(
         new FileInputStream(csv), StandardCharsets.UTF_8))) {
@@ -57,7 +72,6 @@ public class ImportadorProductos {
       while ((l = br.readLine()) != null)
         lineas.add(l);
     }
-
     String sep = detectarSeparador(lineas);
     System.out.println("🔍 Separador detectado: '" + sep + "'");
 
@@ -68,6 +82,7 @@ public class ImportadorProductos {
       if (linea.isBlank())
         continue;
 
+      // Buscar header
       if (!enDatos) {
         String low = linea.toLowerCase();
         if (low.contains("descrip. del grupo")
@@ -94,7 +109,7 @@ public class ImportadorProductos {
         String modelo = p[1].trim();
         String nombre = p[2].trim();
         double costo = parsePrecio(p[3]);
-        double venta = parsePrecio(p[5]);
+        double venta = proveedor.calcularPrecioVenta(costo);
 
         if (nombre.isEmpty()) {
           r.saltados++;
@@ -103,7 +118,6 @@ public class ImportadorProductos {
           continue;
         }
         if (modelo.isEmpty()) {
-          // Generamos un modelo sintético para no perder el producto
           modelo = "S/M-" + fila;
         }
         if (modelosExistentes.contains(modelo)) {
@@ -125,7 +139,7 @@ public class ImportadorProductos {
         prod.setStockMinimo(0);
         prod.setActivo(true);
         prod.setFechaAlta(LocalDate.now());
-        prod.setProveedor("COSQUIN HERRAJES");
+        prod.setProveedor(proveedor.getNombre());
 
         new ProductoDAO().insertar(prod);
         modelosExistentes.add(modelo);
@@ -143,10 +157,8 @@ public class ImportadorProductos {
     return r;
   }
 
-  /**
-   * Detecta el separador contando cuántas veces aparece cada uno
-   * en la línea con más "celdas" (la de datos).
-   */
+  // ========== Detección de separador ==========
+
   private static String detectarSeparador(List<String> lineas) {
     String[] candidatos = { ";", ",", "\t", "|" };
     String mejor = ";";
