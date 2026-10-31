@@ -2,6 +2,7 @@ com/cerrajeria/model/ItemPresupuesto.class
 com/cerrajeria/controller/PresupuestoController$2.class
 com/cerrajeria/controller/MainController.class
 com/cerrajeria/dao/PresupuestoDAO.class
+com/cerrajeria/util/PdfToCsvConverter.class
 com/cerrajeria/util/ImportadorProductos.class
 com/cerrajeria/dao/CategoriaDAO.class
 com/cerrajeria/model/Producto.class

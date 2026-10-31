@@ -2,6 +2,7 @@ package com.cerrajeria.controller;
 
 import com.cerrajeria.util.ImportadorProductos;
 import com.cerrajeria.util.ImportadorX28;
+import com.cerrajeria.util.PdfToCsvConverter; // <-- NUEVO
 import com.cerrajeria.util.Tema;
 import com.cerrajeria.util.ToggleSwitch;
 import com.cerrajeria.dao.ProveedorDAO;
@@ -35,11 +36,10 @@ public class MainController {
   @FXML
   private TabPane tabPane;
 
-  // Controllers inyectados por JavaFX a partir de los fx:include
   @FXML
   private HistorialController historialViewController;
   @FXML
-  private ProductoController productoViewController; // ← NUEVO
+  private ProductoController productoViewController;
 
   @FXML
   public void initialize() {
@@ -84,11 +84,12 @@ public class MainController {
 
   @FXML
   private void importarCSV() {
-    // 1) Elegir archivo — acepta .csv y .txt (X-28)
+    // 1) Elegir archivo — ahora acepta .pdf, .csv y .txt
     FileChooser fc = new FileChooser();
     fc.setTitle("Seleccionar lista de precios");
     fc.getExtensionFilters().addAll(
-        new FileChooser.ExtensionFilter("Listas (*.csv, *.txt)", "*.csv", "*.txt"),
+        new FileChooser.ExtensionFilter("Listas (*.pdf, *.csv, *.txt)", "*.pdf", "*.csv", "*.txt"),
+        new FileChooser.ExtensionFilter("PDF de Proveedores", "*.pdf"),
         new FileChooser.ExtensionFilter("Solo CSV", "*.csv"),
         new FileChooser.ExtensionFilter("Solo TXT (X-28)", "*.txt"),
         new FileChooser.ExtensionFilter("Todos", "*.*"));
@@ -96,6 +97,8 @@ public class MainController {
     File archivo = fc.showOpenDialog(menuBar.getScene().getWindow());
     if (archivo == null)
       return;
+
+    File csvTemporal = null; // Para borrarlo después de importar
 
     try {
       // 2) Diálogo de proveedor
@@ -111,13 +114,19 @@ public class MainController {
           ? ""
           : proveedor.getNombre().toLowerCase();
 
-      boolean esX28 = nombreArchivo.endsWith(".txt")
+      if (nombreArchivo.endsWith(".pdf")) {
+        // --- FLUJO NUEVO PARA PDF ---
+        System.out.println("▶ Convirtiendo PDF a CSV temporal: " + archivo.getName());
+        csvTemporal = PdfToCsvConverter.convertir(archivo);
+        
+        System.out.println("▶ Importando datos del PDF...");
+        r = ImportadorProductos.importar(csvTemporal, proveedor);
+        
+      } else if (nombreArchivo.endsWith(".txt") 
           || nombreArchivo.contains("x28")
           || nombreArchivo.contains("x-28")
           || nombreProv.contains("x28")
-          || nombreProv.contains("x-28");
-
-      if (esX28) {
+          || nombreProv.contains("x-28")) {
         System.out.println("▶ Usando parser X-28 para: " + archivo.getName());
         r = ImportadorX28.importar(archivo, proveedor);
       } else {
@@ -143,6 +152,11 @@ public class MainController {
       err.setHeaderText(null);
       err.setContentText(e.getMessage() == null ? e.toString() : e.getMessage());
       err.showAndWait();
+    } finally {
+      // Limpiamos el archivo temporal si se creó
+      if (csvTemporal != null && csvTemporal.exists()) {
+          csvTemporal.delete();
+      }
     }
   }
 
