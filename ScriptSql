@@ -1,20 +1,24 @@
--- Crear la base
+-- ==========================================================
+-- SCRIPT DE BASE DE DATOS - CERRAJERÍA
+-- ==========================================================
+
 CREATE DATABASE IF NOT EXISTS cerrajeria
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
 USE cerrajeria;
 
--- Categorías (cerradura, candado, cámara, etc.)
+-- 1. CATEGORÍAS
 CREATE TABLE IF NOT EXISTS categoria (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     nombre      VARCHAR(50) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
--- Productos
+-- 2. PRODUCTOS
+-- Nota: 'codigo' permite NULL porque tu ProductoDAO usa 'modelo' para el código.
 CREATE TABLE IF NOT EXISTS producto (
     id              INT AUTO_INCREMENT PRIMARY KEY,
-    codigo          VARCHAR(30)  NOT NULL UNIQUE,
+    codigo          VARCHAR(30) UNIQUE, 
     nombre          VARCHAR(120) NOT NULL,
     marca           VARCHAR(60),
     categoria_id    INT,
@@ -43,20 +47,20 @@ CREATE TABLE IF NOT EXISTS producto (
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- Presupuestos
+-- 3. PRESUPUESTOS
 CREATE TABLE IF NOT EXISTS presupuesto (
-    id              INT AUTO_INCREMENT PRIMARY KEY,
-    numero          INT NOT NULL UNIQUE,
-    fecha           DATE NOT NULL,
-    validez_hasta   DATE,
-    cliente_nombre  VARCHAR(120),
+    id               INT AUTO_INCREMENT PRIMARY KEY,
+    numero           INT NOT NULL UNIQUE,
+    fecha            DATE NOT NULL,
+    validez_hasta    DATE,
+    cliente_nombre   VARCHAR(120),
     cliente_telefono VARCHAR(40),
     descuento_global DECIMAL(5,2) NOT NULL DEFAULT 0,
-    observaciones   TEXT,
-    total           DECIMAL(12,2) NOT NULL DEFAULT 0
+    observaciones    TEXT,
+    total            DECIMAL(12,2) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB;
 
--- Ítems del presupuesto
+-- 4. ITEMS DEL PRESUPUESTO
 CREATE TABLE IF NOT EXISTS presupuesto_item (
     id              INT AUTO_INCREMENT PRIMARY KEY,
     presupuesto_id  INT NOT NULL,
@@ -73,13 +77,7 @@ CREATE TABLE IF NOT EXISTS presupuesto_item (
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- Categorías iniciales
-INSERT IGNORE INTO categoria (nombre) VALUES
-    ('Cerradura'), ('Candado'), ('Cilindro'), ('Llave'),
-    ('Cámara'), ('Alarma'), ('Control de acceso'),
-    ('Accesorio'), ('Herramienta'), ('Otro');
-
-
+-- 5. PROVEEDORES
 CREATE TABLE IF NOT EXISTS proveedor (
     id                INT AUTO_INCREMENT PRIMARY KEY,
     nombre            VARCHAR(80) NOT NULL UNIQUE,
@@ -88,6 +86,18 @@ CREATE TABLE IF NOT EXISTS proveedor (
     observaciones     VARCHAR(255)
 ) ENGINE=InnoDB;
 
--- Tu primer proveedor
-INSERT IGNORE INTO proveedor (nombre, iva_porcentaje, markup_porcentaje)
+-- ==========================================================
+-- DATOS INICIALES
+-- ==========================================================
+
+-- Categorías base
+INSERT IGNORE INTO categoria (nombre) VALUES
+    ('Cerradura'), ('Candado'), ('Cilindro'), ('Llave'),
+    ('Cámara'), ('Alarma'), ('Control de acceso'),
+    ('Accesorio'), ('Herramienta'), ('Otro');
+
+-- Proveedor de prueba
+INSERT IGNORE INTO proveedor (nombre, iva_porcentaje, markup_porcentaje) 
 VALUES ('COSQUIN HERRAJES', 21.00, 50.00);
+
+ALTER TABLE producto MODIFY codigo VARCHAR(30) UNIQUE;

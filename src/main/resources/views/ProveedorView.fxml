@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.cerrajeria.controller.ProveedorController">
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10;">
+            <Button text="+ Nuevo Proveedor" onAction="#nuevo" styleClass="btn-nuevo"/>
+            <Button text="Editar" onAction="#editar" fx:id="btnEditar"/>
+            <Button text="Eliminar" onAction="#eliminar" fx:id="btnEliminar"/>
+        </HBox>
+    </top>
+    <center>
+        <TableView fx:id="tabla" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="250"/>
+                <TableColumn fx:id="colIva" text="IVA %" prefWidth="100"/>
+                <TableColumn fx:id="colMarkup" text="Markup %" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

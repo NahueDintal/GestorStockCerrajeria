@@ -4,6 +4,7 @@
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/controller/PresupuestoController.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/controller/ProductoController.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/controller/ProductoFormController.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/controller/ProveedorController.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/dao/CategoriaDAO.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/dao/ConexionDB.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/dao/PresupuestoDAO.java

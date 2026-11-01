@@ -40,6 +40,8 @@ public class MainController {
   private HistorialController historialViewController;
   @FXML
   private ProductoController productoViewController;
+  @FXML
+  private ProveedorController proveedorViewController;
 
   @FXML
   public void initialize() {
@@ -52,6 +54,8 @@ public class MainController {
           if (nueva != null && "Historial".equals(nueva.getText())
               && historialViewController != null) {
             historialViewController.refrescar();
+          }
+          if ("Proveedores".equals(nueva.getText()) && proveedorViewController != null) {
           }
         });
   }
@@ -118,11 +122,11 @@ public class MainController {
         // --- FLUJO NUEVO PARA PDF ---
         System.out.println("▶ Convirtiendo PDF a CSV temporal: " + archivo.getName());
         csvTemporal = PdfToCsvConverter.convertir(archivo);
-        
+
         System.out.println("▶ Importando datos del PDF...");
         r = ImportadorProductos.importar(csvTemporal, proveedor);
-        
-      } else if (nombreArchivo.endsWith(".txt") 
+
+      } else if (nombreArchivo.endsWith(".txt")
           || nombreArchivo.contains("x28")
           || nombreArchivo.contains("x-28")
           || nombreProv.contains("x28")
@@ -155,7 +159,7 @@ public class MainController {
     } finally {
       // Limpiamos el archivo temporal si se creó
       if (csvTemporal != null && csvTemporal.exists()) {
-          csvTemporal.delete();
+        csvTemporal.delete();
       }
     }
   }
