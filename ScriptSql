@@ -2,6 +2,8 @@
 -- SCRIPT DE BASE DE DATOS - CERRAJERÍA
 -- ==========================================================
 
+DROP DATABASE cerrajeria;
+
 CREATE DATABASE IF NOT EXISTS cerrajeria
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
