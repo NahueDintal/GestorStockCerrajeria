@@ -16,7 +16,7 @@
             <columns>
                 <TableColumn fx:id="colNombre" text="Nombre" prefWidth="250"/>
                 <TableColumn fx:id="colIva" text="IVA %" prefWidth="100"/>
-                <TableColumn fx:id="colMarkup" text="Markup %" prefWidth="100"/>
+                <TableColumn fx:id="colMarkup" text="Ganancia %" prefWidth="100"/>
             </columns>
         </TableView>
     </center>

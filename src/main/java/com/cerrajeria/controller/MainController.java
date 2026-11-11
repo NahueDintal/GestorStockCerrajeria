@@ -211,7 +211,7 @@ public class MainController {
     grid.add(txtNombre, 1, 1);
     grid.add(new Label("IVA %:"), 0, 2);
     grid.add(txtIva, 1, 2);
-    grid.add(new Label("Markup %:"), 0, 3);
+    grid.add(new Label("Ganancia %:"), 0, 3);
     grid.add(txtMarkup, 1, 3);
     grid.add(lblPreview, 0, 4, 2, 1);
 
