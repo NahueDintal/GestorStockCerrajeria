@@ -207,4 +207,39 @@ public class ProductoController {
     cargarDatos();
     aplicarFiltros();
   }
+
+  @FXML
+  private Button btnImportar;
+
+  @FXML
+  private void importar() {
+    try {
+      if (new com.cerrajeria.dao.ProveedorDAO().listar().isEmpty()) {
+        new Alert(Alert.AlertType.WARNING,
+            "Primero cargá un proveedor (menú Proveedores).").showAndWait();
+        return;
+      }
+      javafx.stage.FileChooser fc = new javafx.stage.FileChooser();
+      fc.setTitle("Seleccionar lista de precios");
+      fc.getExtensionFilters().add(
+          new javafx.stage.FileChooser.ExtensionFilter("Excel", "*.xlsx", "*.xls"));
+      java.io.File archivo = fc.showOpenDialog(tabla.getScene().getWindow());
+      if (archivo == null)
+        return;
+
+      DialogoImportarXlsx dlg = new DialogoImportarXlsx(archivo);
+      var res = dlg.showAndWait();
+      res.ifPresent(r -> {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setHeaderText("Importación terminada");
+        a.setContentText(r.toString());
+        a.showAndWait();
+        cargarDatos();
+        aplicarFiltros();
+      });
+    } catch (Exception e) {
+      e.printStackTrace();
+      new Alert(Alert.AlertType.ERROR, "Error: " + e.getMessage()).showAndWait();
+    }
+  }
 }

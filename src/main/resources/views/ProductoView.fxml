@@ -24,6 +24,8 @@
         <Button fx:id="btnEliminar" text="Eliminar" onAction="#eliminar"
                 style="-fx-base: #E57373;"/>
         <Button fx:id="btnRefrescar" text="⟳" onAction="#refrescar"/>
+        <Button fx:id="btnImportar" text="Importar" onAction="#importar"
+                style="-fx-base: #42A5F5;"/>
     </HBox>
 
     <TableView fx:id="tabla" VBox.vgrow="ALWAYS">

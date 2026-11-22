@@ -2,7 +2,7 @@ package com.cerrajeria.controller;
 
 import com.cerrajeria.util.ImportadorProductos;
 import com.cerrajeria.util.ImportadorX28;
-import com.cerrajeria.util.PdfToCsvConverter; // <-- NUEVO
+import com.cerrajeria.util.ImportadorXlsx;
 import com.cerrajeria.util.Tema;
 import com.cerrajeria.util.ToggleSwitch;
 import com.cerrajeria.dao.ProveedorDAO;
@@ -49,15 +49,10 @@ public class MainController {
     themeSwitch.setSelectedSilent(esOscuro);
     themeSwitch.setOnToggle(() -> Tema.alternar(menuBar.getScene()));
 
-    tabPane.getSelectionModel().selectedItemProperty().addListener(
-        (obs, vieja, nueva) -> {
-          if (nueva != null && "Historial".equals(nueva.getText())
-              && historialViewController != null) {
-            historialViewController.refrescar();
-          }
-          if ("Proveedores".equals(nueva.getText()) && proveedorViewController != null) {
-          }
-        });
+    tabPane.getSelectionModel().selectedItemProperty().addListener((obs, vieja, nueva) -> {
+      if (nueva != null && "Historial".equals(nueva.getText()) && historialViewController != null)
+        historialViewController.refrescar();
+    });
   }
 
   @FXML
@@ -86,94 +81,70 @@ public class MainController {
     a.showAndWait();
   }
 
+  /** ÚNICO método de importación: acepta .xlsx, .xls o .txt (X28). */
   @FXML
-  private void importarCSV() {
-    // 1) Elegir archivo — ahora acepta .pdf, .csv y .txt
+  private void importar() {
     FileChooser fc = new FileChooser();
     fc.setTitle("Seleccionar lista de precios");
     fc.getExtensionFilters().addAll(
-        new FileChooser.ExtensionFilter("Listas (*.pdf, *.csv, *.txt)", "*.pdf", "*.csv", "*.txt"),
-        new FileChooser.ExtensionFilter("PDF de Proveedores", "*.pdf"),
-        new FileChooser.ExtensionFilter("Solo CSV", "*.csv"),
-        new FileChooser.ExtensionFilter("Solo TXT (X-28)", "*.txt"),
+        new FileChooser.ExtensionFilter("Listas (*.xlsx, *.xls, *.txt)",
+            "*.xlsx", "*.xls", "*.txt"),
+        new FileChooser.ExtensionFilter("Excel", "*.xlsx", "*.xls"),
+        new FileChooser.ExtensionFilter("Texto X-28", "*.txt"),
         new FileChooser.ExtensionFilter("Todos", "*.*"));
 
     File archivo = fc.showOpenDialog(menuBar.getScene().getWindow());
     if (archivo == null)
       return;
 
-    File csvTemporal = null; // Para borrarlo después de importar
-
     try {
-      // 2) Diálogo de proveedor
       List<Proveedor> proveedores = new ProveedorDAO().listar();
       Proveedor proveedor = dialogoProveedor(proveedores);
       if (proveedor == null)
         return;
 
-      // 3) Detectar parser según archivo y/o proveedor
       ImportadorProductos.Resultado r;
-      String nombreArchivo = archivo.getName().toLowerCase();
-      String nombreProv = proveedor.getNombre() == null
-          ? ""
-          : proveedor.getNombre().toLowerCase();
+      String nombre = archivo.getName().toLowerCase();
 
-      if (nombreArchivo.endsWith(".pdf")) {
-        // --- FLUJO NUEVO PARA PDF ---
-        System.out.println("▶ Convirtiendo PDF a CSV temporal: " + archivo.getName());
-        csvTemporal = PdfToCsvConverter.convertir(archivo);
-
-        System.out.println("▶ Importando datos del PDF...");
-        r = ImportadorProductos.importar(csvTemporal, proveedor);
-
-      } else if (nombreArchivo.endsWith(".txt")
-          || nombreArchivo.contains("x28")
-          || nombreArchivo.contains("x-28")
-          || nombreProv.contains("x28")
-          || nombreProv.contains("x-28")) {
-        System.out.println("▶ Usando parser X-28 para: " + archivo.getName());
+      if (nombre.endsWith(".xlsx") || nombre.endsWith(".xls")) {
+        System.out.println("▶ Importando Excel: " + archivo.getName());
+        r = ImportadorXlsx.importar(archivo, proveedor);
+      } else if (nombre.endsWith(".txt") || nombre.contains("x28") || nombre.contains("x-28")) {
+        System.out.println("▶ Importando X-28: " + archivo.getName());
         r = ImportadorX28.importar(archivo, proveedor);
       } else {
-        System.out.println("▶ Usando importador CSV genérico para: " + archivo.getName());
+        System.out.println("▶ Importando CSV genérico: " + archivo.getName());
         r = ImportadorProductos.importar(archivo, proveedor);
       }
 
-      // 4) Mostrar resultado
       Alert ok = new Alert(Alert.AlertType.INFORMATION);
       ok.setTitle("Importación terminada");
       ok.setHeaderText("Proveedor: " + proveedor.getNombre());
       ok.setContentText(r.toString());
       ok.showAndWait();
 
-      // 5) Refrescar la tabla de productos
-      if (productoViewController != null) {
+      if (productoViewController != null)
         productoViewController.refrescar();
-      }
+
     } catch (Exception e) {
       e.printStackTrace();
       Alert err = new Alert(Alert.AlertType.ERROR);
       err.setTitle("Error al importar");
-      err.setHeaderText(null);
+      err.setHeaderText("No se pudo leer el archivo");
       err.setContentText(e.getMessage() == null ? e.toString() : e.getMessage());
       err.showAndWait();
-    } finally {
-      // Limpiamos el archivo temporal si se creó
-      if (csvTemporal != null && csvTemporal.exists()) {
-        csvTemporal.delete();
-      }
     }
   }
 
-  private Proveedor dialogoProveedor(List<Proveedor> existentes) throws Exception {
+  private Proveedor dialogoProveedor(List<Proveedor> existentes) {
     Dialog<Proveedor> dlg = new Dialog<>();
     dlg.setTitle("Datos del proveedor");
     dlg.setHeaderText("¿De qué proveedor es esta lista?");
 
-    ComboBox<Proveedor> cbProv = new ComboBox<>(
-        FXCollections.observableArrayList(existentes));
-    cbProv.setPromptText("Elegí o creá uno nuevo");
+    ComboBox<Proveedor> cbProv = new ComboBox<>(FXCollections.observableArrayList(existentes));
+    cbProv.setPromptText("Elegí uno o creá uno nuevo");
     TextField txtNombre = new TextField();
-    txtNombre.setPromptText("Nombre del nuevo proveedor");
+    txtNombre.setPromptText("Nombre del proveedor");
     TextField txtIva = new TextField("21");
     TextField txtMarkup = new TextField("50");
     Label lblPreview = new Label();
@@ -205,7 +176,7 @@ public class MainController {
     grid.setHgap(10);
     grid.setVgap(10);
     grid.setPadding(new Insets(20));
-    grid.add(new Label("Proveedor existente:"), 0, 0);
+    grid.add(new Label("Proveedor:"), 0, 0);
     grid.add(cbProv, 1, 0);
     grid.add(new Label("Nombre:"), 0, 1);
     grid.add(txtNombre, 1, 1);

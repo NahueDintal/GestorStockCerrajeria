@@ -1,5 +1,6 @@
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/Launcher.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/MainApp.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/controller/DialogoImportarXlsx.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/controller/HistorialController.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/controller/MainController.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/controller/PresupuestoController.java
@@ -19,6 +20,7 @@
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/AbrirArchivo.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/ImportadorProductos.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/ImportadorX28.java
+/home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/ImportadorXlsx.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/PdfToCsvConverter.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/PresupuestoPDF.java
 /home/nahue/Estudio/GestorStockCerrajeria/src/main/java/com/cerrajeria/util/Tema.java

@@ -15,7 +15,7 @@
                 <menus>
                     <Menu text="Archivo">
                         <items>
-                            <MenuItem text="Importar productos 'lista de precios'" onAction="#importarCSV"/>
+                            <MenuItem text="Importar Lista" onAction="#importar"/>
                             <SeparatorMenuItem/>
                             <MenuItem text="Salir" onAction="#salir"/>
                         </items>
