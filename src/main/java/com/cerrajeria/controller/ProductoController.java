@@ -4,6 +4,8 @@ import com.cerrajeria.dao.CategoriaDAO;
 import com.cerrajeria.dao.ProductoDAO;
 import com.cerrajeria.model.Categoria;
 import com.cerrajeria.model.Producto;
+import com.cerrajeria.util.TableUtils;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -74,8 +76,8 @@ public class ProductoController {
           return;
         }
         setText(String.valueOf(v));
-        Producto p = getTableView().getItems().get(getIndex());
-        setStyle(p.necesitaReposicion()
+        Producto p = getTableRow() == null ? null : getTableRow().getItem();
+        setStyle(p != null && p.necesitaReposicion()
             ? "-fx-text-fill: red; -fx-font-weight: bold;"
             : "");
       }
@@ -103,12 +105,18 @@ public class ProductoController {
       SortedList<Producto> ordenados = new SortedList<>(filtrados);
       ordenados.comparatorProperty().bind(tabla.comparatorProperty());
       tabla.setItems(ordenados);
+
+      // 👇 auto-fit DESPUÉS de setear items
+      Platform.runLater(() -> TableUtils.autoAjustarColumnas(tabla, 400));
+
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
   private void aplicarFiltros() {
+    if (filtrados == null)
+      return; // 👈 guard por si falló cargarDatos()
     String q = txtBuscar.getText() == null ? "" : txtBuscar.getText().toLowerCase();
     Categoria cat = cbFiltroCategoria.getValue();
     boolean filtrarPorCat = (cat != null && cat.getId() != -1);
