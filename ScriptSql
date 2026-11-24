@@ -102,4 +102,6 @@ INSERT IGNORE INTO categoria (nombre) VALUES
 INSERT IGNORE INTO proveedor (nombre, iva_porcentaje, markup_porcentaje) 
 VALUES ('COSQUIN HERRAJES', 21.00, 50.00);
 
-ALTER TABLE producto MODIFY codigo VARCHAR(30) UNIQUE;
+
+INSERT IGNORE INTO proveedor (nombre, iva_porcentaje, markup_porcentaje) 
+VALUES ('X-28', 21.00, 60.00);
